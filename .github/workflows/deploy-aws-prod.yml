@@ -1,0 +1,122 @@
+# Website -> AWS prod (ECS on EC2, raporin-ecs-prod / prod-website)
+#
+# Tetik: aws-prod branch'ine push (veya elle "Run workflow").
+# Akis:
+#   1. GitHub OIDC ile AWS rolu (statik access key YOK)
+#   2. Docker image build (NEXT_PUBLIC_* build-arg olarak bundle'a gomulur)
+#      -> ECR prod-website:<sha> + :latest
+#   3. prod-website family'sinin son revizyonu + yeni image -> yeni revizyon -> servis guncelle
+#
+# GitHub Environment "aws-prod" vars:
+#   AWS_ROLE_ARN                           (zorunlu)
+#   NEXT_PUBLIC_API_URL                    (zorunlu, or. https://api.raporin.com)
+#   NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION   (opsiyonel, SEO meta)
+#   NEXT_PUBLIC_BING_VERIFICATION          (opsiyonel)
+#   NEXT_PUBLIC_YANDEX_VERIFICATION        (opsiyonel)
+# Runtime secret yok. Runtime env (API_INTERNAL_URL=http://gateway:8080, NODE_ENV) task
+# definition'da (Terraform 009-aws-ecs-appservices-prod).
+
+name: Deploy website (AWS prod)
+
+on:
+  push:
+    branches: [aws-prod]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-aws-prod-website
+  cancel-in-progress: false
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: eu-central-1
+  ECR_REPOSITORY: prod-website
+  ECS_CLUSTER: raporin-ecs-prod
+  ECS_SERVICE: prod-website
+  TASK_FAMILY: prod-website
+  CONTAINER_NAME: website
+
+jobs:
+  deploy:
+    name: Build & deploy
+    runs-on: ubuntu-latest
+    environment: aws-prod
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check required vars
+        env:
+          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+        run: |
+          if [ -z "$NEXT_PUBLIC_API_URL" ]; then
+            echo "::error::GitHub aws-prod var 'NEXT_PUBLIC_API_URL' bos (build-time, bundle'a gomulur)"; exit 1
+          fi
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build & push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          push: true
+          provenance: false
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }}
+            NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=${{ vars.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }}
+            NEXT_PUBLIC_BING_VERIFICATION=${{ vars.NEXT_PUBLIC_BING_VERIFICATION }}
+            NEXT_PUBLIC_YANDEX_VERIFICATION=${{ vars.NEXT_PUBLIC_YANDEX_VERIFICATION }}
+          tags: |
+            ${{ steps.ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+            ${{ steps.ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Fetch current task definition
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition "$TASK_FAMILY" \
+            --query taskDefinition > task-definition.json
+
+      - name: Render task definition with new image
+        id: render
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ steps.ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+
+      - name: Deploy to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.render.outputs.task-definition }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          service: ${{ env.ECS_SERVICE }}
+          wait-for-service-stability: true
+          wait-for-minutes: 10
+
+      - name: Summary
+        run: |
+          {
+            echo "### prod-website deploy"
+            echo "- image: \`${{ env.ECR_REPOSITORY }}:${{ github.sha }}\`"
+            echo "- cluster/service: \`${{ env.ECS_CLUSTER }}/${{ env.ECS_SERVICE }}\`"
+            echo "- NEXT_PUBLIC_API_URL: \`${{ vars.NEXT_PUBLIC_API_URL }}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
