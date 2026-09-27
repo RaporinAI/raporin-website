@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import ContactNoticeModal from "./ContactNoticeModal";
+import { API_URL } from "../lib/auth/api";
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -31,8 +32,7 @@ export default function ContactSection() {
     setStatusMessage("");
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.raporin.com";
-      const response = await fetch(`${apiUrl}/api/contact/submit`, {
+      const response = await fetch(`${API_URL}/api/contact/submit`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

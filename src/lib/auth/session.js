@@ -4,8 +4,13 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { SESSION_FLAG_COOKIE } from "./sessionFlag";
 
-export const BACKEND_URL =
-  process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL || "https://api.raporin.com";
+// Sunucu tarafı: önce iç ağ adresi (API_INTERNAL_URL, runtime), yoksa public API adresi
+// (NEXT_PUBLIC_API_URL, build-time). İkisi de yoksa hata — kodda varsayılan adres yok.
+const configuredBackendUrl = process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL;
+if (!configuredBackendUrl) {
+  throw new Error("API_INTERNAL_URL veya NEXT_PUBLIC_API_URL tanımlı değil");
+}
+export const BACKEND_URL = configuredBackendUrl.replace(/\/+$/, "");
 
 export const ACCESS_COOKIE = "rp_at";
 export const REFRESH_COOKIE = "rp_rt";

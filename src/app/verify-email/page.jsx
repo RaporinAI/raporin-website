@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { API_URL } from "../../lib/auth/api";
 
 export default function VerifyEmailPage() {
   const [status, setStatus] = useState("checking"); // checking | success | error
@@ -14,7 +15,7 @@ export default function VerifyEmailPage() {
       return;
     }
 
-    fetch(`https://api.raporin.com/api/email/verify-email?token=${token}`)
+    fetch(`${API_URL}/api/email/verify-email?token=${token}`)
       .then(async (res) => {
         if (res.ok) {
           setStatus("success");

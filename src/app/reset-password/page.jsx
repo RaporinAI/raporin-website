@@ -2,6 +2,7 @@
 import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff, CheckCircle, XCircle, Loader2 } from "lucide-react";
+import { API_URL } from "../../lib/auth/api";
 
 function ResetPasswordForm() {
   const [formData, setFormData] = useState({
@@ -77,7 +78,7 @@ function ResetPasswordForm() {
     setErrorMessage("");
 
     try {
-      const response = await fetch("https://api.raporin.com/api/auth/reset-password", {
+      const response = await fetch(`${API_URL}/api/auth/reset-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
