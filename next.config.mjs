@@ -9,10 +9,14 @@ const nextConfig = {
   
   // Image optimization
   images: {
-    formats: ['image/avif', 'image/webp'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    // Yalnız WebP: AVIF dönüşümü küçük container'da çok CPU/RAM harcıyor (OOM) ve
+    // tek format olması CDN (Cloudflare) cache'ini tarayıcıdan bağımsız güvenli kılar.
+    formats: ['image/webp'],
+    // Kaynak ekran görüntüleri en fazla 1920 px; daha büyük varyant üretilmez.
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60,
+    // Optimize edilmiş görsel 30 gün geçerli (her 60 sn'de yeniden üretilmesin).
+    minimumCacheTTL: 2592000,
   },
   
   // Eski adresler kalıcı olarak yeni Türkçe adreslere yönlenir.
