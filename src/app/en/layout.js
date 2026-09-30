@@ -78,24 +78,14 @@ export const metadata = {
     images: ["/og-image.png"],
     creator: "@raporinai",
   },
+  // Yabancı kullanıcı hedeflenmiyor; İngilizce sayfalar erişilebilir kalır ama indekslenmez.
+  // Alt sayfalar (/en/about, /en/download) bu ayarı devralır.
   robots: {
-    index: true,
+    index: false,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
   },
   alternates: {
     canonical: 'https://raporin.com/en',
-    languages: {
-      'tr-TR': 'https://raporin.com',
-      'en': 'https://raporin.com/en',
-      'x-default': 'https://raporin.com',
-    },
   },
 };
 

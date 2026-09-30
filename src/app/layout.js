@@ -82,11 +82,6 @@ export const metadata = {
   },
   alternates: {
     canonical: 'https://raporin.com',
-    languages: {
-      'tr-TR': 'https://raporin.com',
-      'en': 'https://raporin.com/en',
-      'x-default': 'https://raporin.com',
-    },
   },
   // Doğrulama kodları ortam değişkeninden gelir; tanımlı değilse etiket hiç basılmaz.
   // Şablon değerli bir meta etiketi doğrulamayı bozar (bkz. .env.example).
