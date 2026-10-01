@@ -1,9 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { ArrowRight, Menu, Sparkles, UserRound, X } from "lucide-react";
+import { ArrowRight, Hourglass, Menu, UserRound, X } from "lucide-react";
 import { useSessionFlag } from "../lib/auth/useSessionFlag";
 
 const links = [
@@ -15,6 +15,39 @@ const links = [
   { href: "/blog", label: "Blog" },
   { href: "/#iletisim", label: "İletişim" },
 ];
+const BETA_END = new Date("2026-10-31T23:59:59+03:00").getTime();
+
+function BetaCountdown() {
+  const [remaining, setRemaining] = useState(null);
+
+  useEffect(() => {
+    const tick = () => setRemaining(Math.max(0, BETA_END - Date.now()));
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  if (remaining === 0) return null;
+
+  const s = Math.floor((remaining ?? 0) / 1000);
+  const parts = [
+    [Math.floor(s / 86400), "g"],
+    [Math.floor((s % 86400) / 3600), "s"],
+    [Math.floor((s % 3600) / 60), "dk"],
+    [s % 60, "sn"],
+  ];
+
+  return (
+    <span role="timer" aria-label="Beta döneminin bitmesine kalan süre" className="inline-flex items-center gap-0.5 tabular-nums">
+      {parts.map(([value, unit]) => (
+        <span key={unit} className="rounded-full bg-[#075F55]/10 px-1.5 py-px text-[#075F55]">
+          {remaining === null ? "--" : String(value).padStart(2, "0")}{unit}
+        </span>
+      ))}
+    </span>
+  );
+}
+
 const focusStyle = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-700";
 const downloadStyle = `min-h-12 items-center justify-center gap-2.5 rounded-xl border border-teal-600/10 bg-gradient-to-r from-[#008C87] to-[#00A58E] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-700/10 transition-colors hover:from-teal-800 hover:to-teal-700 ${focusStyle}`;
 
@@ -36,10 +69,15 @@ export default function Navbar() {
     <header className="fixed inset-x-0 top-0 z-50 font-sans">
       {isHome && (
         <div className="flex h-8 items-center justify-center gap-2 bg-gradient-to-r from-[#076E6B] via-[#009A87] to-[#076E6B] px-2 text-[11px] font-medium text-white sm:gap-3 sm:text-xs">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#C5FFE7] px-2.5 py-0.5 text-[10px] font-extrabold tracking-wide text-[#075F55] sm:text-xs">
-            <Sparkles aria-hidden="true" size={13} /> ŞİMDİ ÜCRETSİZ
+          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#C5FFE7] py-0.5 pl-2.5 pr-0.5 text-[10px] font-extrabold tracking-wide text-[#075F55] md:text-xs">
+            <Hourglass aria-hidden="true" size={13} className="animate-hourglass" />
+            <span className="hidden md:inline">BETA BİTİYOR</span>
+            <BetaCountdown />
           </span>
-          <span>Beta süresince tüm özellikler açık</span>
+          <span className="truncate">
+            <span className="sm:hidden">Şimdi katıl, <strong className="mx-0.5 rounded-md bg-[#FFD84D] px-1.5 py-0.5 font-extrabold text-[#5A3E00] shadow-sm">%50 İNDİRİM</strong> kazan</span>
+            <span className="hidden sm:inline">Beta bitmeden ücretsiz katılın, ücretli dönemde <strong className="mx-0.5 rounded-md bg-[#FFD84D] px-1.5 py-0.5 font-extrabold text-[#5A3E00] shadow-sm">%50 İNDİRİM</strong> kazanın</span>
+          </span>
         </div>
       )}
     <nav aria-label="Ana menü" className="border-b border-teal-100/60 bg-white/90 font-sans backdrop-blur-xl">
