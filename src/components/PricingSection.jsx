@@ -1,5 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
+import { Hourglass } from "lucide-react";
+import { BetaCountdownTiles } from "./BetaCountdown";
 
 export default function PricingSection() {
   return (
@@ -21,7 +23,7 @@ export default function PricingSection() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
-          className="relative p-10 rounded-3xl shadow-xl border-2 border-[#17C6A3] bg-gradient-to-br from-[#E9FFFB] via-white to-[#D8FFF6] overflow-hidden"
+          className="relative p-6 sm:p-10 rounded-3xl shadow-xl border-2 border-[#17C6A3] bg-gradient-to-br from-[#E9FFFB] via-white to-[#D8FFF6] overflow-hidden"
         >
           {/* Dekoratif arka plan efektleri */}
           <div className="absolute -top-20 -right-20 w-64 h-64 bg-teal-200/30 rounded-full blur-3xl" />
@@ -39,6 +41,18 @@ export default function PricingSection() {
             <p className="text-lg text-gray-700 leading-relaxed">
               Fikir ve geri bildirimlerinizle bize destek olun, hizmetimizi birlikte geliştirelim.
             </p>
+
+            <div className="mt-8 rounded-2xl border border-[#17C6A3]/30 bg-[#C5FFE7]/40 px-4 py-6 sm:px-8">
+              <p className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-[#C5FFE7] px-3 py-1 text-xs font-extrabold tracking-wide text-[#075F55]">
+                <Hourglass aria-hidden="true" size={14} className="animate-hourglass" /> BETA BİTİYOR
+              </p>
+              <BetaCountdownTiles />
+              <p className="mt-5 text-base font-medium text-gray-800">
+                Beta bitmeden ücretsiz katılın, ücretli dönemde{" "}
+                <strong className="whitespace-nowrap rounded-md bg-[#FFD84D] px-2 py-0.5 font-extrabold text-[#5A3E00] shadow-sm">%50 İNDİRİM</strong>{" "}
+                kazanın
+              </p>
+            </div>
             
             <motion.a
               href="/kayit"

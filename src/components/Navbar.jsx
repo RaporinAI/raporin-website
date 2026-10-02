@@ -1,10 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ArrowRight, Hourglass, Menu, UserRound, X } from "lucide-react";
 import { useSessionFlag } from "../lib/auth/useSessionFlag";
+import { BetaCountdown } from "./BetaCountdown";
 
 const links = [
   { href: "/", label: "Ana Sayfa" },
@@ -15,39 +16,6 @@ const links = [
   { href: "/blog", label: "Blog" },
   { href: "/#iletisim", label: "İletişim" },
 ];
-const BETA_END = new Date("2026-10-31T23:59:59+03:00").getTime();
-
-function BetaCountdown() {
-  const [remaining, setRemaining] = useState(null);
-
-  useEffect(() => {
-    const tick = () => setRemaining(Math.max(0, BETA_END - Date.now()));
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, []);
-
-  if (remaining === 0) return null;
-
-  const s = Math.floor((remaining ?? 0) / 1000);
-  const parts = [
-    [Math.floor(s / 86400), "g"],
-    [Math.floor((s % 86400) / 3600), "s"],
-    [Math.floor((s % 3600) / 60), "dk"],
-    [s % 60, "sn"],
-  ];
-
-  return (
-    <span role="timer" aria-label="Beta döneminin bitmesine kalan süre" className="inline-flex items-center gap-0.5 tabular-nums">
-      {parts.map(([value, unit]) => (
-        <span key={unit} className="rounded-full bg-[#075F55]/10 px-1.5 py-px text-[#075F55]">
-          {remaining === null ? "--" : String(value).padStart(2, "0")}{unit}
-        </span>
-      ))}
-    </span>
-  );
-}
-
 const focusStyle = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal-700";
 const downloadStyle = `min-h-12 items-center justify-center gap-2.5 rounded-xl border border-teal-600/10 bg-gradient-to-r from-[#008C87] to-[#00A58E] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-700/10 transition-colors hover:from-teal-800 hover:to-teal-700 ${focusStyle}`;
 
