@@ -68,19 +68,19 @@ export default function AboutPage() {
             </div>
             <div className="space-y-4 text-gray-700 leading-relaxed">
               <p>
-                <strong>RaporinAI</strong>, eczacıların reçete ve rapor kontrol süreçlerini hızlandırmak ve hata riskini daha erken görünür kılmak için geliştirildi.
+                <strong>RaporinAI</strong>, eczacıların reçete ve rapor kontrolünde harcadığı zamanı azaltmak ve hata riskini daha erken görünür hale getirmek için geliştirildi.
               </p>
               <p>
-                Eczanelerde her gün çok sayıda reçete ve rapor, güncel SUT kurallarına göre kontrol ediliyor. Bu süreç manuel yürütüldüğünde hem zaman kaybına yol açabiliyor hem de bazı uyumsuzlukların gözden kaçmasına neden olabiliyor.
+                Eczanelerde her gün çok sayıda reçete ve rapor, güncel SUT kurallarına göre kontrol ediliyor. Bu süreç manuel ilerlediğinde hem zaman kaybına hem de gözden kaçan uyumsuzluklara neden olabiliyor.
               </p>
               <p>
                 RaporinAI, yapay zekâ destekli analiz altyapısıyla reçete ve raporları saniyeler içinde inceler; olası uyumsuzlukları tespit eder ve neyin, neden dikkat gerektirdiğini açık şekilde gösterir.
               </p>
               <p>
-                Biz yalnızca kontrol sürecini hızlandıran bir yazılım sunmuyoruz. Eczacıların operasyonel yükünü azaltan, karar süreçlerini destekleyen ve eczacılıkta dijital dönüşümü ileri taşıyan bir teknoloji altyapısı oluşturuyoruz.
+                Biz yalnızca kontrol sürecini hızlandıran bir yazılım geliştirmiyoruz. Eczacıların operasyonel yükünü azaltan, karar süreçlerini destekleyen ve eczacılıkta dijital dönüşümü ileri taşıyan bir teknoloji altyapısı oluşturuyoruz.
               </p>
               <p className="text-teal-700 font-semibold">
-                Vizyonumuz; eczacıların günlük iş yükünü azaltan, karar süreçlerini güçlendiren ve eczacılığın yapay zekâ dönüşümüne öncülük eden güvenilir bir teknoloji ortağı olmaktır.
+                Amacımız, eczacıların zamanını değil, eczacılığa ayırmasını sağlamak.
               </p>
             </div>
           </motion.div>
@@ -235,7 +235,7 @@ export default function AboutPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/kayit"
+              href="/indir"
               className="inline-block px-8 py-4 bg-white text-teal-600 font-semibold rounded-full hover:bg-gray-100 transition-all shadow-lg"
             >
               Hemen Başlayın

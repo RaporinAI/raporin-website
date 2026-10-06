@@ -1,18 +1,20 @@
 "use client";
 import { useSyncExternalStore } from "react";
-import { Building2, LayoutDashboard, ShieldCheck, UserRound, Users } from "lucide-react";
+import { Building2, LayoutDashboard, Package, ShieldCheck, UserRound, Users } from "lucide-react";
 import AccountSidebar from "./AccountSidebar";
 import OverviewSection from "./OverviewSection";
 import ProfileForm from "./ProfileForm";
 import PasswordForm from "./PasswordForm";
 import PharmacyForm from "./PharmacyForm";
 import TeamSection from "./TeamSection";
+import SubscriptionSection from "./SubscriptionSection";
 import { validateMobilePhone } from "../../lib/auth/validation";
 
 const ADMIN_ROLES = ["PHARMACY_ADMIN", "SYSTEM_ADMIN"];
 
 const SECTIONS = [
   { id: "genel", label: "Genel bakış", description: "Uygulama ve yapılacaklar", icon: LayoutDashboard },
+  { id: "paket", label: "Paketim", description: "Paket ve kredi bilgileri", icon: Package },
   { id: "kisisel", label: "Kişisel bilgiler", description: "Ad, telefon, e-posta", icon: UserRound },
   { id: "guvenlik", label: "Güvenlik", description: "Şifre değiştirme", icon: ShieldCheck },
   { id: "eczane", label: "Eczane bilgileri", description: "Ad, GLN, konum, telefon", icon: Building2 },
@@ -86,6 +88,7 @@ export default function AccountDashboard({ account, setAccount, onLogout, loggin
 
         <div className="min-w-0">
           {panel("genel", <OverviewSection profile={profile} pharmacy={pharmacy} todos={todos} onNavigate={select} />)}
+          {panel("paket", <SubscriptionSection />)}
           {panel("kisisel", <ProfileForm profile={profile} onSaved={setProfile} />)}
           {panel("guvenlik", <PasswordForm />)}
           {panel(
