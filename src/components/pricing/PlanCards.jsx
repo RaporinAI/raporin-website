@@ -35,12 +35,15 @@ function PlanCard({ plan, yearly, index, compact, discountLabel }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.08 }}
-      className={`relative flex flex-col rounded-3xl transition-shadow ${compact ? "p-6" : "p-8"} ${
+      // Çerçeve rengi "tercih edilen" etiketini, zemin ve parlama öne çıkarılan paketi belirler.
+      className={`relative flex flex-col rounded-3xl border-2 transition-shadow ${compact ? "p-6" : "p-8"} ${
+        popular ? "border-[#17C6A3]" : "border-[#17C6A3]/40 hover:border-[#17C6A3]/80"
+      } ${
         featured
-          ? "border-2 border-[#17C6A3] bg-gradient-to-br from-[#D8FFF6] via-[#F2FFFC] to-[#A8F5E0] shadow-[0_0_60px_-10px_rgba(23,198,163,0.55)] ring-4 ring-[#17C6A3]/20"
+          ? "bg-gradient-to-br from-[#D8FFF6] via-[#F2FFFC] to-[#A8F5E0] shadow-[0_0_36px_-12px_rgba(23,198,163,0.35)] ring-2 ring-[#17C6A3]/15"
           : popular
-            ? "border-2 border-[#17C6A3] bg-white shadow-xl shadow-teal-100"
-            : "border-2 border-gray-200 bg-white shadow-sm"
+            ? "bg-gradient-to-br from-[#E6FFF9] via-[#F7FFFD] to-[#C8F7EA] shadow-md shadow-[#17C6A3]/10"
+            : "bg-gradient-to-br from-white via-[#FAFFFE] to-[#E2FAF3] shadow-sm"
       }`}
     >
       {popular && (
@@ -57,7 +60,7 @@ function PlanCard({ plan, yearly, index, compact, discountLabel }) {
       <p className="mt-1 min-h-[2.5rem] text-sm text-gray-500">{plan.description}</p>
 
       <div className="mt-4">
-        <span className="inline-block rounded-lg bg-[#E9FFFB] px-3 py-1 text-sm font-semibold text-[#0F918B]">
+        <span className="inline-block rounded-lg border border-gray-200 bg-white px-3 py-1 text-sm font-semibold text-gray-700">
           {plan.monthlyCredits ? `${formatTL(plan.monthlyCredits)} kredi / ay` : "∞ Sınırsız kredi"}
         </span>
       </div>
@@ -76,7 +79,7 @@ function PlanCard({ plan, yearly, index, compact, discountLabel }) {
           pricing.listPrice && (
             <>
               <span className="text-sm text-gray-400 line-through">{formatTL(pricing.listPrice)} ₺</span>
-              <span className="rounded-md bg-[#E9FFFB] px-2 py-0.5 text-xs font-bold text-[#0F918B]">2 ay ücretsiz</span>
+              <span className="rounded-md bg-[#17C6A3] px-2 py-0.5 text-xs font-bold text-white shadow-sm">2 ay ücretsiz</span>
             </>
           )
         )}
@@ -89,7 +92,7 @@ function PlanCard({ plan, yearly, index, compact, discountLabel }) {
       </div>
       <p className="mt-1 text-sm text-gray-500">{subline}</p>
 
-      <dl className="mb-6 mt-6 space-y-3 border-t border-gray-100 pt-6 text-sm">
+      <dl className="mb-6 mt-6 space-y-3 border-t border-[#17C6A3]/20 pt-6 text-sm">
         {creditRows.map(([label, value]) => (
           <div key={label} className="flex items-center justify-between gap-3">
             <dt className="text-gray-500">{label}</dt>
@@ -140,7 +143,7 @@ export function BillingToggle({ yearly, onChange }) {
             {option.value && (
               <span
                 className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${
-                  yearly ? "bg-white text-[#0F918B]" : "bg-[#E9FFFB] text-[#0F918B]"
+                  yearly ? "bg-white text-[#0F918B]" : "bg-[#17C6A3] text-white"
                 }`}
               >
                 2 ay ücretsiz
