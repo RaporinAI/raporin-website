@@ -134,6 +134,18 @@ export default function Footer() {
           </ul>
         </div>
 
+        {/* iyzico ödeme logoları — iyzico üye işyeri başvurusu için zorunlu */}
+        <div className="border-t border-gray-200 pt-8 mt-8 flex justify-center">
+          <Image
+            src="/payment/iyzico-logo-band.svg"
+            alt="iyzico ile Öde, Mastercard, Visa, American Express, Troy"
+            width={429}
+            height={32}
+            unoptimized
+            className="h-6 w-auto sm:h-8"
+          />
+        </div>
+
         {/* Alt Bölüm */}
         <div className="border-t border-gray-200 pt-8 mt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
