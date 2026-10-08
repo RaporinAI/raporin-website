@@ -23,7 +23,8 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  const isHome = pathname === "/";
+  // Beta geri sayım bandı ana sayfada ve kayıt sayfasında gösterilir.
+  const showBetaBanner = pathname === "/" || pathname === "/kayit";
 
   const loggedIn = useSessionFlag();
 
@@ -35,7 +36,7 @@ export default function Navbar() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 font-sans">
-      {isHome && (
+      {showBetaBanner && (
         <div className="flex h-8 items-center justify-center gap-2 bg-gradient-to-r from-[#076E6B] via-[#009A87] to-[#076E6B] px-2 text-[11px] font-medium text-white sm:gap-3 sm:text-xs">
           <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#C5FFE7] py-0.5 pl-2.5 pr-0.5 text-[10px] font-extrabold tracking-wide text-[#075F55] md:text-xs">
             <Hourglass aria-hidden="true" size={13} className="animate-hourglass" />
@@ -69,7 +70,7 @@ export default function Navbar() {
         </button>
       </div>
       {menuOpen && (
-        <div id="mobile-navigation" className="flex flex-col gap-1 overflow-y-auto border-t border-teal-100 bg-white px-6 py-4 shadow-xl shadow-teal-900/5 xl:hidden" style={{ maxHeight: `calc(100dvh - ${isHome ? 112 : 80}px)` }} onKeyDown={(event) => { if (event.key === "Escape") { setMenuOpen(false); document.querySelector('[aria-controls="mobile-navigation"]')?.focus(); } }}>
+        <div id="mobile-navigation" className="flex flex-col gap-1 overflow-y-auto border-t border-teal-100 bg-white px-6 py-4 shadow-xl shadow-teal-900/5 xl:hidden" style={{ maxHeight: `calc(100dvh - ${showBetaBanner ? 112 : 80}px)` }} onKeyDown={(event) => { if (event.key === "Escape") { setMenuOpen(false); document.querySelector('[aria-controls="mobile-navigation"]')?.focus(); } }}>
           {links.map(({ href, label }) => <Link key={href} href={href} onClick={() => setMenuOpen(false)} className={`rounded-lg px-3 py-3 text-sm font-medium text-slate-600 hover:bg-teal-50 hover:text-teal-700 ${focusStyle}`}>{label}</Link>)}
           <Link href={primaryCta.href} onClick={() => setMenuOpen(false)} className={`mt-2 inline-flex ${downloadStyle}`}>{primaryCta.label}<PrimaryIcon aria-hidden="true" size={18} /></Link>
           {!loggedIn && <Link href="/giris" onClick={() => setMenuOpen(false)} className={`inline-flex ${loginStyle}`}>Giriş yap</Link>}
