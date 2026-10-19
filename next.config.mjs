@@ -26,6 +26,8 @@ const nextConfig = {
       { source: '/about', destination: '/hakkimizda', permanent: true },
       { source: '/download', destination: '/indir', permanent: true },
       { source: '/privacy', destination: '/gizlilik-politikasi', permanent: true },
+      // Beta dönemi sayfası: ücretli döneme geçişte ana ürün sayfasına taşındı.
+      { source: '/ucretsiz-eczane-rapor-programi', destination: '/eczane-rapor-kontrol-programi', permanent: true },
     ];
   },
 

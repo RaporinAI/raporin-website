@@ -1,8 +1,6 @@
 // Statik paket verisi. İleride backend'den gelecek; aynı şekli koruyarak değiştirilebilir.
 // Fiyatlar TL, KDV hariç.
 
-export const BETA_DISCOUNT_RATE = 0.5;
-
 export const PRICING_PLANS = [
   {
     id: "standart",
@@ -26,6 +24,6 @@ export const PRICING_PLANS = [
     description: "Kredi saymak istemeyen yoğun eczaneler için",
     monthlyCredits: null,
     monthly: { price: 1299, popular: true },
-    yearly: { price: 12990, listPrice: 15588, popular: true, betaDiscount: true },
+    yearly: { price: 12990, listPrice: 15588, popular: true },
   },
 ];

@@ -24,7 +24,9 @@ export async function accountRequest(resource, payload, method = "PUT") {
 
   // Backend "mevcut şifre hatalı" için de 401 döner; o durum oturumla ilgili değildir.
   if (response.status === 401 && body?.errorCode !== INVALID_CURRENT_PASSWORD) {
-    window.location.assign("/giris?next=/hesabim");
+    // Giriş sonrası kullanıcı kaldığı yere (ör. Hesabım > Paketim) döner.
+    const back = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    window.location.assign(`/giris?next=${encodeURIComponent(back)}`);
     return { ok: false, code: null, message: "Oturumunuzun süresi doldu, lütfen tekrar giriş yapın." };
   }
   if (!response.ok) {

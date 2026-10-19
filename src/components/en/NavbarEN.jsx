@@ -41,7 +41,7 @@ export default function NavbarEN() {
                     Download App
                   </span>
                   <span className="text-xs font-extrabold text-yellow-100 uppercase tracking-widest drop-shadow-md whitespace-nowrap bg-white/10 px-1.5 py-0.5 rounded-sm">
-                    ✨ FREE NOW
+                    ✨ FREE ACCOUNT
                   </span>
                 </div>
               </div>
@@ -75,7 +75,7 @@ export default function NavbarEN() {
               <div className="relative flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-rose-500 via-orange-400 to-amber-400 shadow-md border border-white/20">
                 <div className="flex flex-col items-start leading-none gap-0.5">
                   <span className="text-sm font-bold text-white tracking-wide">Download App</span>
-                  <span className="text-xs font-extrabold text-yellow-100 uppercase tracking-widest drop-shadow-md whitespace-nowrap bg-white/10 px-1.5 py-0.5 rounded-sm">✨ FREE NOW</span>
+                  <span className="text-xs font-extrabold text-yellow-100 uppercase tracking-widest drop-shadow-md whitespace-nowrap bg-white/10 px-1.5 py-0.5 rounded-sm">✨ FREE ACCOUNT</span>
                 </div>
               </div>
             </motion.div>

@@ -15,8 +15,14 @@ import {
   validatePassword,
 } from "../../lib/auth/validation";
 import { trackSignUp } from "../../lib/analytics";
+import { usePendingPurchase } from "../../lib/billing/pendingPurchase";
+import { formatTL } from "../../lib/billing/catalog";
+import { useWelcomeOffer } from "../../lib/billing/useWelcomeOffer";
+import SelectedPlanNotice from "../../components/billing/SelectedPlanNotice";
 
 const TERMS_URL = "/kvkk/kullanim-kosullari-ve-uyelik-sozlesmesi";
+// Fiyatlandırmadan gelindiyse de giriş sonrası Hesabım açılır; seçilen paket orada hatırlatılır.
+const LOGIN_TO_CHECKOUT = "/giris";
 const PRIVACY_URL = "/kvkk/eczaneler-icin-aydinlatma-metni";
 
 const STEP_FIELDS = {
@@ -102,6 +108,11 @@ function StepIndicator({ step }) {
 }
 
 export default function SignupPage() {
+  const pendingPurchase = usePendingPurchase();
+  // Hoş geldin kredisi miktarı admin panelden gelir; bilinmiyorsa miktarsız yazılır.
+  const offer = useWelcomeOffer();
+  const welcomeOff = offer?.credits === 0;
+  const welcomeText = offer?.credits > 0 ? `${formatTL(offer.credits)} ücretsiz krediyle` : "size tanımlanan ücretsiz krediyle";
   const [step, setStep] = useState(1);
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
@@ -213,7 +224,16 @@ export default function SignupPage() {
 
   if (registeredEmail) {
     return (
-      <AuthShell betaBanner title="E-postanızı doğrulayın" footer={<>Doğruladıktan sonra e-posta adresiniz ve şifrenizle <AuthLink href="/giris">giriş yapın</AuthLink>, ardından uygulamayı indirin.</>}>
+      <AuthShell
+        title="E-postanızı doğrulayın"
+        footer={
+          pendingPurchase ? (
+            <>Doğruladıktan sonra <AuthLink href={LOGIN_TO_CHECKOUT}>giriş yapın</AuthLink>; seçtiğiniz paket hesabınızda sizi bekliyor olacak.</>
+          ) : (
+            <>Doğruladıktan sonra e-posta adresiniz ve şifrenizle <AuthLink href="/giris">giriş yapın</AuthLink>, ardından uygulamayı indirin.</>
+          )
+        }
+      >
         <div className="flex flex-col items-center text-center">
           <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-50 text-teal-600">
             <MailCheck size={32} aria-hidden="true" />
@@ -237,11 +257,22 @@ export default function SignupPage() {
 
   return (
     <AuthShell
-      betaBanner
-      title="Ücretsiz hesap oluşturun"
-      subtitle="Kredi kartı gerekmez. Kayıt sonrası masaüstü uygulamasını indirebilirsiniz."
-      footer={<>Zaten hesabınız var mı? <AuthLink href="/giris">Giriş yapın</AuthLink></>}
+      title={pendingPurchase ? "Satın almak için hesap oluşturun" : "Ücretsiz hesap oluşturun"}
+      subtitle={
+        pendingPurchase
+          ? `Önce hesabınızı oluşturun. E-posta doğrulamasından sonra seçtiğiniz paketi hesabınızdan satın alabilirsiniz${welcomeOff ? "." : `; o zamana kadar ${welcomeText} deneyebilirsiniz.`}`
+          : welcomeOff
+            ? "Hesabınızı ücretsiz oluşturun; e-postanızı doğruladıktan sonra uygulamayı indirip paketinizi seçebilirsiniz."
+            : `${offer?.credits > 0 ? `${formatTL(offer.credits)} kredi hediye!` : "Ücretsiz krediyle deneyin!"} Kart bilgisi gerekmez; kaydolun, hemen analize başlayın.`
+      }
+      footer={
+        <>
+          Zaten hesabınız var mı?{" "}
+          <AuthLink href={pendingPurchase ? LOGIN_TO_CHECKOUT : "/giris"}>Giriş yapın</AuthLink>
+        </>
+      }
     >
+      <SelectedPlanNotice />
       <StepIndicator step={step} />
       <form ref={formRef} onSubmit={onSubmit} noValidate className="space-y-5">
         {formError && <Alert>{formError}</Alert>}

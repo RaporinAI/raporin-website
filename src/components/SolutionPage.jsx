@@ -123,7 +123,7 @@ export default function SolutionPage({ page }) {
           {/* CTA */}
           <div className="mt-14 rounded-2xl border border-teal-100 bg-gradient-to-br from-[#F4FDFB] to-white p-8 text-center">
             <p className="text-lg font-semibold text-gray-900">
-              Beta sürecinde tamamen ücretsiz
+              Ücretsiz hesap oluşturun
             </p>
             <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-gray-600">
               Windows masaüstü uygulamasını indirin, Medula&apos;ya bağlanın ve dönemin

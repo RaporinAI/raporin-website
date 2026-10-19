@@ -4,6 +4,9 @@ import Link from "next/link";
 import { trackDownload } from "../../lib/analytics";
 import { useSessionFlag } from "../../lib/auth/useSessionFlag";
 import { DESKTOP_VERSION, DOWNLOAD_URL } from "../../lib/download";
+import WelcomeOfferBadge from "../../components/billing/WelcomeOfferBadge";
+import { formatTL } from "../../lib/billing/catalog";
+import { useWelcomeOffer } from "../../lib/billing/useWelcomeOffer";
 
 const primaryButton =
   "mt-9 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#17C6A3] to-[#0F918B] px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl";
@@ -12,6 +15,7 @@ const primaryButton =
 // yapılmamış hali render edilir; oturumu olan ziyaretçi doğrudan indirme butonunu görür.
 export default function DownloadPage() {
   const loggedIn = useSessionFlag();
+  const offer = useWelcomeOffer();
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#F8FBFF] via-white to-[#E8FFFB] px-4 py-24">
@@ -43,8 +47,21 @@ export default function DownloadPage() {
           <>
             <p className="mt-5 leading-relaxed text-gray-600">
               Önce ücretsiz hesabınızı oluşturun; e-postanızı doğruladıktan sonra masaüstü
-              uygulamasını hesabım sayfanızdan indirebilirsiniz.
+              uygulamasını hesabım sayfanızdan indirebilirsiniz
+              {offer?.credits === 0 ? (
+                "."
+              ) : (
+                <>
+                  .{" "}
+                  {offer?.credits > 0 ? (
+                    <strong className="text-gray-800">Üstelik {formatTL(offer.credits)} kredi hediye!</strong>
+                  ) : (
+                    "Ücretsiz krediyle hemen deneyin."
+                  )}
+                </>
+              )}
             </p>
+            <WelcomeOfferBadge className="mt-4 border border-teal-100" />
             <Link href="/kayit" className={primaryButton}>
               Ücretsiz hesap oluştur
             </Link>
@@ -58,7 +75,10 @@ export default function DownloadPage() {
         )}
 
         <p className="mt-4 text-xs text-gray-400">
-          Windows 10 / 11 · Sürüm {DESKTOP_VERSION} · Kredi kartı gerekmez
+          Windows 10 / 11 · Sürüm {DESKTOP_VERSION}
+          {offer?.credits === 0
+            ? " · Kredi kartı gerekmez"
+            : ` · ${offer?.credits > 0 ? `${formatTL(offer.credits)} kredi hediye` : "Ücretsiz krediyle deneyin"} · Kredi kartı gerekmez`}
         </p>
 
         <p className="mt-8 border-t border-gray-100 pt-6 text-sm text-gray-500">

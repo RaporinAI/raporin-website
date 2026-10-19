@@ -11,7 +11,7 @@ export const solutionPages = {
     productSchema: true,
     updatedAt: "2026-09-11",
     description:
-      "RaporinAI ile eczanede yapay zeka destekli rapor kontrolü: Medula aktarımı, PDF analizi ve SUT kriterlerine göre açıklamalı sonuçlar. Beta süresince ücretsiz.",
+      "RaporinAI ile eczanede yapay zeka destekli rapor kontrolü: Medula aktarımı, PDF analizi ve SUT kriterlerine göre açıklamalı sonuçlar.",
     h1: "Eczane Rapor Kontrol Programı",
     lead:
       "Raporlu bir ilacın SGK tarafından karşılanması için yalnızca raporun var olması yetmez. Rapor süresi, teşhis kodu, raporu düzenleyen hekimin branşı ve SUT'un o ilaç için aradığı kriterlerin tamamının tutması gerekir. RaporinAI bu denetimi sizin yerinize yapar.",
@@ -78,7 +78,7 @@ export const solutionPages = {
       },
       {
         q: "Program ücretli mi?",
-        a: "RaporinAI beta sürecinde tamamen ücretsizdir. Kredi kartı bilgisi istenmez, kontrol başına ücretlendirme yoktur.",
+        a: "RaporinAI aylık veya yıllık abonelik paketleriyle kullanılır; paketler eczanenin reçete yoğunluğuna göre farklı aylık kredi içerir. Hesap oluşturmak ücretsizdir ve kredi kartı gerektirmez.",
       },
     ],
     related: ["recete-kontrol-programi", "sut-kontrol-programi", "toplu-recete-kontrolu"],
@@ -298,67 +298,6 @@ export const solutionPages = {
       },
     ],
     related: ["medula-rapor-kontrol", "eczane-rapor-kontrol-programi", "recete-kontrol-programi"],
-  },
-
-  "ucretsiz-eczane-rapor-programi": {
-    slug: "ucretsiz-eczane-rapor-programi",
-    navLabel: "Ücretsiz Eczane Rapor Programı",
-    title: "Ücretsiz Eczane Rapor Programı — Beta Sürecinde Tüm Özellikler",
-    description:
-      "RaporinAI beta sürecinde tamamen ücretsiz. Kontrol başına kredi yok, kredi kartı istenmiyor, özellik kısıtlaması yok. Windows için indirin.",
-    h1: "Ücretsiz Eczane Rapor Programı",
-    lead:
-      "RaporinAI beta sürecinde tamamen ücretsizdir. Kontrol başına kredi satın almanız, kredi kartı bilgisi girmeniz ya da kısıtlı bir sürümle başlamanız gerekmez.",
-    screenshot: { src: "/screens/rapor-yukleme-1.png", alt: "RaporinAI rapor yükleme ve analiz ekranı" },
-    intro: [
-      "Rapor kontrol araçlarında yaygın model, kontrol başına kredi satmaktır: aylık belirli sayıda kontrol hakkı alırsınız, bittiğinde ya paket yükseltirsiniz ya da ay sonunu beklersiniz.",
-      "Bu model, aracı en çok ihtiyaç duyduğunuz anda — fatura dönemi sonunda, yüzlerce reçeteyi kontrol ederken — pahalı hâle getirir. Kontrol etmekten kaçınmaya başlarsınız ki bu da aracın varlık sebebini ortadan kaldırır.",
-    ],
-    sections: [
-      {
-        h2: "Ücretsiz derken ne kastediyoruz",
-        body: [
-          "Beta sürecinde tüm özellikler kısıtsız kullanılabilir. Kontrol sayısında sınır, özelliklerde kilit ya da süreli deneme yoktur.",
-        ],
-        list: [
-          { title: "Kontrol başına ücret yok", body: "Kaç reçete ya da rapor analiz ettiğinizden bağımsız olarak ek ücret çıkmaz." },
-          { title: "Kredi kartı istenmiyor", body: "Hesap açmak ve kullanmaya başlamak için ödeme bilgisi girmeniz gerekmez." },
-          { title: "Özellik kısıtlaması yok", body: "Medula entegrasyonu, toplu analiz, PDF ile tekil kontrol ve çoklu kullanıcı dahil tüm özellikler açıktır." },
-        ],
-      },
-      {
-        h2: "Neden ücretsiz?",
-        body: [
-          "RaporinAI beta aşamasında ve ürünü gerçek eczane akışında görmeye ihtiyacımız var. Karşılaştığınız hatalar, eksik bulduğunuz kriterler ve önerileriniz ürünü doğrudan şekillendiriyor.",
-          "Beta sonrası fiyatlandırmaya geçildiğinde bunu önceden duyuracağız; sürpriz bir ücretlendirme olmayacak.",
-        ],
-      },
-      {
-        h2: "Nasıl başlanır?",
-        body: [
-          "Windows masaüstü uygulamasını indirip kurun, hesabınızla giriş yapın ve Medula'ya bağlanın. Kurulum dışında yapılandırma gerektirmez.",
-        ],
-      },
-    ],
-    faq: [
-      {
-        q: "Gerçekten tamamen ücretsiz mi?",
-        a: "Evet. Beta sürecinde tüm özellikler ücretsizdir; kontrol başına ücret ya da kredi paketi yoktur.",
-      },
-      {
-        q: "Kredi kartı bilgisi vermem gerekiyor mu?",
-        a: "Hayır. Hesap açmak ve kullanmaya başlamak için ödeme bilgisi istenmez.",
-      },
-      {
-        q: "Ücretsiz sürümde özellik kısıtlaması var mı?",
-        a: "Hayır. Medula entegrasyonu, toplu analiz, PDF ile tekil kontrol ve çoklu kullanıcı dahil tüm özellikler kullanılabilir.",
-      },
-      {
-        q: "Beta bitince ne olacak?",
-        a: "Fiyatlandırmaya geçilmesi durumunda bu önceden duyurulacaktır.",
-      },
-    ],
-    related: ["eczane-rapor-kontrol-programi", "toplu-recete-kontrolu", "medula-rapor-kontrol"],
   },
 };
 

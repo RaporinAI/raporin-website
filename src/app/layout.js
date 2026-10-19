@@ -24,7 +24,7 @@ export const metadata = {
     template: "%s | RaporinAI"
   },
   description:
-    "RaporinAI: yapay zeka destekli eczane reçete ve rapor kontrol programı. Medula aktarımı, toplu analiz ve SUT kriterlerine göre kontrol. Beta süresince ücretsiz.",
+    "RaporinAI: yapay zeka destekli eczane reçete ve rapor kontrol programı. Medula aktarımı, toplu analiz ve SUT kriterlerine göre kontrol. Ücretsiz krediyle deneyin, kredi kartı gerekmez.",
   // Google keywords meta etiketini yok sayar; kısa ve odaklı tutuyoruz.
   keywords: [
     "Eczane Reçete ve Rapor Kontrol Programı",
@@ -50,7 +50,7 @@ export const metadata = {
     url: "https://raporin.com",
     title: "RaporinAI — Yapay Zeka Destekli Eczane Reçete ve Rapor Kontrolü",
     description:
-      "Medula aktarımı, PDF ile rapor kontrolü ve toplu reçete analizi. SUT kriterlerine göre açıklamalı sonuçlar; beta süresince ücretsiz.",
+      "Medula aktarımı, PDF ile rapor kontrolü ve toplu reçete analizi. SUT kriterlerine göre açıklamalı sonuçlar. Eczanenize uygun aylık veya yıllık paketler.",
     siteName: "RaporinAI",
     images: [
       {
@@ -65,7 +65,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "RaporinAI — Yapay Zeka Destekli Eczane Reçete ve Rapor Kontrolü",
     description:
-      "Medula’dan reçete aktarın, raporlu ilaçları toplu analiz edin ve SUT kriterlerine göre sonuçları inceleyin. Beta süresince ücretsiz.",
+      "Medula’dan reçete aktarın, raporlu ilaçları toplu analiz edin ve SUT kriterlerine göre sonuçları inceleyin.",
     images: ["/og-image.png"],
     creator: "@raporinai",
   },

@@ -3,7 +3,7 @@ export const metadata = {
     absolute: "Ücretsiz Kayıt Ol — RaporinAI Eczane Rapor Kontrol Programı",
   },
   description:
-    "RaporinAI'a ücretsiz üye olun, masaüstü uygulamasını indirin. Medula'dan aktardığınız reçete ve raporları SUT kurallarına göre yapay zekâ ile kontrol edin. Kredi kartı gerekmez.",
+    "RaporinAI'ı ücretsiz krediyle deneyin, masaüstü uygulamasını indirin. Medula'dan aktardığınız reçete ve raporları SUT kurallarına göre yapay zekâ ile kontrol edin. Kredi kartı gerekmez.",
   alternates: { canonical: "https://raporin.com/kayit" },
   openGraph: {
     title: "Ücretsiz Kayıt Ol — RaporinAI",
