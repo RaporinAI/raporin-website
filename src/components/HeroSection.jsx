@@ -1,48 +1,45 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
-import { ArrowRight, Gift, ChartNoAxesColumnIncreasing, CheckCircle2, Link2, Maximize2, PlayCircle, Plus, ShieldCheck, Sparkles, Store, TriangleAlert, X, XCircle } from "lucide-react";
+import { useReducedMotion } from "framer-motion";
+import { ArrowRight, Gift, ChartNoAxesColumnIncreasing, CheckCircle2, Link2, PlayCircle, Plus, ShieldCheck, Sparkles, Store, TriangleAlert, XCircle } from "lucide-react";
 import styles from "./HeroSection.module.css";
+import HeroDemo, { DEMO_SCENES } from "./HeroDemo";
 import { formatTL } from "../lib/billing/catalog";
 import { useWelcomeOffer } from "../lib/billing/useWelcomeOffer";
 
-const screenshots = [
-  {
-    id: "toplu-analiz",
-    src: "/screens/toplu-analiz.png",
-    label: "Toplu analiz",
-    title: "Reçetelerinizi tek ekrandan kontrol edin",
-    description: "Medula’dan aktardığınız reçeteleri birlikte değerlendirin.",
-    alt: "RaporinAI toplu reçete analizi ekranı",
-  },
-  {
-    id: "recete-detay",
-    src: "/screens/recete-detay.png",
-    label: "Reçete detayı",
-    title: "Reçete ve rapor detaylarını birlikte inceleyin",
-    description: "İlaç, doz ve rapor bilgilerine aynı yerden ulaşın.",
-    alt: "RaporinAI reçete detayı ve tekil analiz ekranı",
-  },
-  {
-    id: "analiz-sonuclari",
-    src: "/screens/analiz-sonuclari.png",
-    label: "Analiz sonucu",
-    title: "Kontrol sonuçlarını açıklamalarıyla görün",
-    description: "SUT kriterlerine göre tespit edilen uygunsuzlukları inceleyin.",
-    alt: "RaporinAI açıklamalı analiz sonuçları ekranı",
-  },
-];
-
-const focusStyle = "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0F918B]";
-
 export default function HeroSection() {
-  const [activeIndex, setActiveIndex] = useState(1);
-  const [selected, setSelected] = useState(null);
-  const activeShot = screenshots[activeIndex];
+  const reduceMotion = useReducedMotion();
+  const [pickedScene, setScene] = useState(null);
+  const [run, setRun] = useState(0);
+  const [playing, setPlaying] = useState(true);
+  const stageRef = useRef(null);
+  // Hareket azaltma tercihinde, kullanıcı bir adım seçene kadar son (sonuç) sahnesi sabit gösterilir.
+  const scene = pickedScene ?? (reduceMotion ? DEMO_SCENES.length - 1 : 0);
+  const activeScene = DEMO_SCENES[scene];
   const offer = useWelcomeOffer();
+
+  // Demo yalnızca ekranda görünürken döner.
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      setPlaying(entry.isIntersecting);
+      if (entry.isIntersecting) setRun((value) => value + 1);
+    }, { threshold: 0.25 });
+    observer.observe(stageRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!playing || reduceMotion) return undefined;
+    const timer = setTimeout(() => setScene((scene + 1) % DEMO_SCENES.length), activeScene.duration);
+    return () => clearTimeout(timer);
+  }, [playing, reduceMotion, scene, run, activeScene.duration]);
+
+  const showScene = (index) => {
+    setScene(index);
+    setRun((value) => value + 1);
+  };
 
   return (
     <section aria-labelledby="hero-title" className={styles.hero}>
@@ -116,7 +113,7 @@ export default function HeroSection() {
             </div>
           </div>
 
-          <div className={styles.stage}>
+          <div ref={stageRef} className={styles.stage}>
             <Plus aria-hidden="true" className={styles.cross} size={65} strokeWidth={5} />
             <Plus aria-hidden="true" className={`${styles.cross} ${styles.crossSmall}`} size={43} strokeWidth={5} />
             <div aria-hidden="true" className={styles.annotation}>
@@ -127,10 +124,9 @@ export default function HeroSection() {
             <div className={styles.device}>
               <div className={styles.frame}>
                 <span aria-hidden="true" className={styles.camera} />
-                <button type="button" onClick={() => setSelected(activeShot)} aria-label={`${activeShot.label} ekranını büyüt`} className={styles.screen}>
-                  <Image key={activeShot.id} src={activeShot.src} alt={activeShot.alt} fill sizes="(min-width: 1536px) 740px, (min-width: 1024px) 51vw, (min-width: 768px) 720px, calc(100vw - 56px)" preload={activeIndex === 1} className="object-contain" />
-                  <span className={styles.zoom}><Maximize2 aria-hidden="true" size={13} /> Büyüt</span>
-                </button>
+                <div className={styles.screen}>
+                  <HeroDemo scene={scene} run={run} />
+                </div>
               </div>
               <div aria-hidden="true" className={styles.base} />
             </div>
@@ -148,13 +144,16 @@ export default function HeroSection() {
             </div>
 
             <div className="sr-only" aria-live="polite" aria-atomic="true">
-              <h2>{activeShot.title}</h2>
-              <p>{activeShot.description}</p>
+              <h2>{activeScene.title}</h2>
+              <p>{activeScene.description}</p>
             </div>
-            <div role="group" aria-label="Uygulama ekranları" className={styles.tabs}>
-              {screenshots.map((shot, index) => (
-                <button key={shot.id} type="button" aria-pressed={index === activeIndex} onClick={() => setActiveIndex(index)} className={styles.tab}>
-                  <span aria-hidden="true" className={styles.tabDot} />{shot.label}
+            <div role="group" aria-label="Nasıl çalışır adımları" className={styles.tabs}>
+              {DEMO_SCENES.map((item, index) => (
+                <button key={item.id} type="button" aria-pressed={index === scene} onClick={() => showScene(index)} className={styles.tab}>
+                  <span aria-hidden="true" className={styles.tabNumber}>{index + 1}</span>{item.label}
+                  {index === scene && playing && !reduceMotion && (
+                    <span key={run} aria-hidden="true" className={styles.tabProgress} style={{ animationDuration: `${item.duration}ms` }} />
+                  )}
                 </button>
               ))}
             </div>
@@ -164,20 +163,6 @@ export default function HeroSection() {
         <div aria-hidden="true" className={styles.signature}>TEKNOLOJİYLE DAHA GÜÇLÜ ECZANELER</div>
       </div>
 
-      <Dialog open={!!selected} onClose={() => setSelected(null)} className="relative z-[100]">
-        <div className="fixed inset-0 bg-gray-950/75 backdrop-blur-sm" aria-hidden="true" />
-        <div className="fixed inset-0 flex items-center justify-center overflow-y-auto p-3 sm:p-6">
-          <DialogPanel className="w-full max-w-6xl overflow-hidden rounded-2xl bg-white shadow-2xl">
-            <div className="flex items-center justify-between gap-3 border-b border-teal-100 px-4 py-3">
-              <DialogTitle className="text-sm font-semibold text-gray-900 sm:text-base">{selected?.title}</DialogTitle>
-              <button type="button" onClick={() => setSelected(null)} aria-label="Önizlemeyi kapat" className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-gray-600 hover:bg-teal-50 ${focusStyle}`}>
-                <X aria-hidden="true" className="h-5 w-5" />
-              </button>
-            </div>
-            {selected && <Image src={selected.src} alt={selected.alt} width={2880} height={1624} sizes="(min-width: 1200px) 1152px, 100vw" className="max-h-[75dvh] w-full object-contain" />}
-          </DialogPanel>
-        </div>
-      </Dialog>
     </section>
   );
 }
