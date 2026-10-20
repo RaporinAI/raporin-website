@@ -10,7 +10,7 @@ import PaymentHistory from "../billing/PaymentHistory";
 import CreditUsageCard from "../billing/CreditUsageCard";
 import BillingInfoForm, { BillingSummary, initialBillingForm } from "../billing/BillingInfoForm";
 import { billingApi, PERIOD_LABEL } from "../../lib/billing/billingApi";
-import { formatTL0, loadCatalog, STATIC_CATALOG, yearlySavingsLabel } from "../../lib/billing/catalog";
+import { formatTL0, loadCatalog, STATIC_CATALOG } from "../../lib/billing/catalog";
 import { trackPurchase } from "../../lib/analytics";
 
 const RESULT_MESSAGES = {
@@ -309,7 +309,7 @@ export default function SubscriptionSection({ view, onNavigate, profile, pharmac
           <h2 className="text-lg font-bold text-slate-900">{hasLiveSubscription ? "Paketler ve fiyatlar" : "Paketler"}</h2>
           <p className="mt-0.5 text-sm text-slate-500">{packagesNote}</p>
         </div>
-        <BillingToggle yearly={yearly} onChange={setYearly} yearlyLabel={yearlySavingsLabel(plans)} />
+        <BillingToggle yearly={yearly} onChange={setYearly} />
       </div>
       <PlanCards plans={plans} yearly={yearly} compact action={action} className="mt-8 xl:grid-cols-3" />
     </section>

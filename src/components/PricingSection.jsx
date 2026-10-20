@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Gift } from "lucide-react";
 import PlanCards, { BillingToggle } from "./pricing/PlanCards";
-import { formatTL, loadCatalogShared, STATIC_CATALOG, yearlySavingsLabel } from "../lib/billing/catalog";
+import { formatTL, loadCatalogShared, STATIC_CATALOG } from "../lib/billing/catalog";
 import { savePendingPurchase } from "../lib/billing/pendingPurchase";
 import { hasSessionFlag } from "../lib/auth/sessionFlag";
 
@@ -55,7 +55,7 @@ export default function PricingSection() {
         )}
 
         <div className="mt-10">
-          <BillingToggle yearly={yearly} onChange={setYearly} yearlyLabel={yearlySavingsLabel(catalog.plans)} />
+          <BillingToggle yearly={yearly} onChange={setYearly} />
         </div>
 
         <PlanCards plans={catalog.plans} yearly={yearly} action={action} className="mt-12 md:grid-cols-3" />

@@ -124,21 +124,6 @@ export function loadCatalogShared() {
   return shared;
 }
 
-/** Yıllık seçiciye yazılacak etiket: tüm paketlerde aynıysa "2 ay ücretsiz", değilse yok. */
-export function yearlySavingsLabel(plans) {
-  const months = new Set();
-  for (const plan of plans) {
-    const monthly = plan.prices.MONTHLY;
-    const yearly = plan.prices.YEARLY;
-    if (!monthly || !yearly || yearly.highlight || !monthly.netPrice) continue;
-    // Beta/kampanya fiyatı değil, normal yıllık fiyat üzerinden hesaplanır.
-    months.add(Math.round(12 - yearly.netPrice / monthly.netPrice));
-  }
-  if (months.size !== 1) return null;
-  const [free] = months;
-  return free >= 1 ? `${free} ay ücretsiz` : null;
-}
-
 export const formatTL = (value) =>
   Number(value).toLocaleString("tr-TR", { maximumFractionDigits: 2, minimumFractionDigits: 0 });
 
