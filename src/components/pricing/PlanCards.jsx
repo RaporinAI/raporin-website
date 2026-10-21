@@ -8,16 +8,29 @@ const formatPerCredit = (value) =>
 
 const DEFAULT_DISCOUNT_LABEL = { yearly: "BETA ÜYELERİNE", monthly: "BETA ÜYELERİNE YILLIKTA" };
 
+/**
+ * Yıllık kampanyayı "12 ay kullan, N ay öde" diye açıkça yazar ("2 ay ücretsiz" 14 aylık kullanım gibi
+ * anlaşılabiliyor). Üstü çizili fiyat da neyi temsil ettiğiyle birlikte gösterilir.
+ */
+function yearlyCampaign(plan) {
+  return {
+    label: "12 ay kullan, 10 ay öde",
+    listLabel: plan.yearly.listPrice === plan.monthly.price * 12 ? "Aylık ödemede 12 ay" : "Normal fiyat",
+  };
+}
+
 function PlanCard({ plan, yearly, index, compact, discountLabel }) {
   const pricing = yearly ? plan.yearly : plan.monthly;
-  const popular = pricing.popular;
-  const featured = plan.yearly.betaDiscount;
   // Yıllıkta beta indirimli paketin ana fiyatı beta fiyatıdır; normal yıllık fiyat üstü çizili gösterilir.
-  const betaPricing = yearly && featured;
+  const betaPricing = yearly && plan.yearly.betaDiscount;
+  // Yeşil "Önerilen" vurgusu tek pakette; beta fiyatlı paket sarı tonla ayrışır, ikisi yarışmaz.
+  const featured = betaPricing;
+  const popular = pricing.popular && !featured;
+  const campaign = yearlyCampaign(plan);
   const shownPrice = betaPricing ? plan.yearly.price * (1 - BETA_DISCOUNT_RATE) : pricing.price;
   const perMonth = yearly ? Math.round(shownPrice / 12) : shownPrice;
 
-  const subline = yearly ? `Aylık ${formatTL(perMonth)} ₺` : "Aylık faturalanır";
+  const subline = yearly ? `Aylık ${formatTL(perMonth)} ₺'ye denk gelir` : "Aylık faturalanır";
   const creditRows = plan.monthlyCredits
     ? [
         ["Aylık kredi", formatTL(plan.monthlyCredits)],
@@ -35,24 +48,21 @@ function PlanCard({ plan, yearly, index, compact, discountLabel }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.08 }}
-      // Çerçeve rengi "tercih edilen" etiketini, zemin ve parlama öne çıkarılan paketi belirler.
       className={`relative flex flex-col rounded-3xl border-2 transition-shadow ${compact ? "p-6" : "p-8"} ${
-        popular ? "border-[#17C6A3]" : "border-[#17C6A3]/40 hover:border-[#17C6A3]/80"
-      } ${
         featured
-          ? "bg-gradient-to-br from-[#D8FFF6] via-[#F2FFFC] to-[#A8F5E0] shadow-[0_0_36px_-12px_rgba(23,198,163,0.35)] ring-2 ring-[#17C6A3]/15"
+          ? "border-[#F5C518] bg-gradient-to-br from-[#FFFBEA] via-white to-[#FFF1BF] shadow-[0_0_36px_-14px_rgba(245,197,24,0.55)]"
           : popular
-            ? "bg-gradient-to-br from-[#E6FFF9] via-[#F7FFFD] to-[#C8F7EA] shadow-md shadow-[#17C6A3]/10"
-            : "bg-gradient-to-br from-white via-[#FAFFFE] to-[#E2FAF3] shadow-sm"
+            ? "border-[#17C6A3] bg-gradient-to-br from-[#E6FFF9] via-[#F7FFFD] to-[#C8F7EA] shadow-[0_0_36px_-12px_rgba(23,198,163,0.35)] ring-2 ring-[#17C6A3]/15"
+            : "border-[#17C6A3]/30 bg-gradient-to-br from-white via-[#FAFFFE] to-[#EEFBF7] shadow-sm hover:border-[#17C6A3]/70"
       }`}
     >
-      {popular && (
+      {(popular || featured) && (
         <span
-          className={`absolute -top-3.5 rounded-full bg-[#17C6A3] px-3 py-1 text-xs font-semibold text-white ${
-            compact ? "left-6" : "left-8"
-          }`}
+          className={`absolute -top-3.5 rounded-full px-3 py-1 text-xs font-semibold ${
+            featured ? "bg-[#FFD84D] font-bold text-[#5A3E00]" : "bg-[#17C6A3] text-white"
+          } ${compact ? "left-6" : "left-8"}`}
         >
-          {yearly ? "En çok tercih edilen" : "Çok tercih edilen"}
+          {featured ? "Beta üyelerine özel" : "Önerilen"}
         </span>
       )}
 
@@ -65,22 +75,30 @@ function PlanCard({ plan, yearly, index, compact, discountLabel }) {
         </span>
       </div>
 
-      {/* Üstü çizili fiyatın gerekçesi yanında; aylıkta satır boş kalır, hiza korunur. */}
-      <div className="mt-6 flex min-h-[1.5rem] flex-wrap items-center gap-2">
+      {/* Üstü çizili fiyat (neyi temsil ettiğiyle) ve kampanya etiketi; aylıkta satırlar boş kalır, hiza korunur. */}
+      <div className="mt-6 min-h-[1.25rem] text-sm text-gray-400">
         {betaPricing ? (
           <>
-            <span className="text-sm text-gray-400 line-through">{formatTL(plan.yearly.price)} ₺</span>
-            <span className="rounded-md bg-[#FFD84D] px-2 py-0.5 text-xs font-extrabold text-[#5A3E00] shadow-sm">
-              {discountLabel.yearly} %{BETA_DISCOUNT_RATE * 100}
-            </span>
+            Normal fiyat <span className="line-through">{formatTL(plan.yearly.price)} ₺</span>
           </>
         ) : (
           yearly &&
           pricing.listPrice && (
             <>
-              <span className="text-sm text-gray-400 line-through">{formatTL(pricing.listPrice)} ₺</span>
-              <span className="rounded-md bg-[#17C6A3] px-2 py-0.5 text-xs font-bold text-white shadow-sm">2 ay ücretsiz</span>
+              {campaign.listLabel} <span className="line-through">{formatTL(pricing.listPrice)} ₺</span>
             </>
+          )
+        )}
+      </div>
+      <div className="mt-1.5 flex min-h-[1.5rem] flex-wrap items-center gap-2">
+        {betaPricing ? (
+          <span className="rounded-md bg-[#FFD84D] px-2 py-0.5 text-xs font-extrabold text-[#5A3E00] shadow-sm">
+            {discountLabel.yearly} %{BETA_DISCOUNT_RATE * 100}
+          </span>
+        ) : (
+          yearly &&
+          pricing.listPrice && (
+            <span className="rounded-md bg-[#17C6A3] px-2 py-0.5 text-xs font-bold text-white shadow-sm">{campaign.label}</span>
           )
         )}
       </div>
@@ -91,6 +109,7 @@ function PlanCard({ plan, yearly, index, compact, discountLabel }) {
         <span className="text-sm text-gray-500">+KDV /{yearly ? "yıl" : "ay"}</span>
       </div>
       <p className="mt-1 text-sm text-gray-500">{subline}</p>
+      {yearly && <p className="text-xs font-medium text-gray-400">Yıllık tek ödeme</p>}
 
       <dl className="mb-6 mt-6 space-y-3 border-t border-[#17C6A3]/20 pt-6 text-sm">
         {creditRows.map(([label, value]) => (
@@ -101,7 +120,7 @@ function PlanCard({ plan, yearly, index, compact, discountLabel }) {
         ))}
       </dl>
 
-      {featured && !yearly && (
+      {plan.yearly.betaDiscount && !yearly && (
         <div className="mt-auto rounded-2xl border-2 border-[#FFD84D] bg-gradient-to-br from-[#FFF6CC] to-[#FFE88A] p-4 shadow-md shadow-amber-200/60">
           <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-extrabold tracking-wide text-[#5A3E00]">
             {discountLabel.monthly}
@@ -122,10 +141,10 @@ function PlanCard({ plan, yearly, index, compact, discountLabel }) {
   );
 }
 
-/** Aylık/Yıllık seçici; "Yıllık" butonunda yıllığa yönlendiren "2 ay ücretsiz" etiketi. */
+/** Aylık/Yıllık seçici; "Yıllık" butonunda "2 ay ücretsiz" etiketi, yıllık seçiliyken altında kampanya açıklaması. */
 export function BillingToggle({ yearly, onChange }) {
   return (
-    <div className="flex justify-center">
+    <div className="flex flex-col items-center gap-3">
       <div className="inline-flex rounded-full border border-gray-200 bg-white p-1 shadow-sm">
         {[
           { label: "Aylık", value: false },
@@ -152,6 +171,11 @@ export function BillingToggle({ yearly, onChange }) {
           </button>
         ))}
       </div>
+      {yearly && (
+        <p className="text-center text-sm text-gray-500">
+          Yıllık ödemede 12 ay kullanın, 10 ayını ödeyin. Tutar tek seferde çekilir.
+        </p>
+      )}
     </div>
   );
 }

@@ -18,14 +18,14 @@ export const PRICING_PLANS = [
     description: "Raporlu reçetesi yüksek olan eczaneler için",
     monthlyCredits: 1200,
     monthly: { price: 649, popular: true },
-    yearly: { price: 6490, listPrice: 7788, popular: false },
+    yearly: { price: 6490, listPrice: 7788, popular: true },
   },
   {
     id: "sinirsiz",
     name: "Sınırsız",
     description: "Kredi saymak istemeyen yoğun eczaneler için",
     monthlyCredits: null,
-    monthly: { price: 1299, popular: true },
-    yearly: { price: 12990, listPrice: 15588, popular: true, betaDiscount: true },
+    monthly: { price: 1299, popular: false },
+    yearly: { price: 12990, listPrice: 15588, popular: false, betaDiscount: true },
   },
 ];
