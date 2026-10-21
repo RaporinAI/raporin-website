@@ -9,16 +9,11 @@ const formatPerCredit = (value) =>
   value.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 /**
- * Yıllık fiyat aylığın tam katıysa kampanyayı "12 ay kullan, N ay öde" diye açıkça yazar
- * ("2 ay ücretsiz" 14 aylık kullanım gibi anlaşılabiliyor); değilse admin paneldeki etiket kullanılır.
+ * Yıllık kampanyayı "12 ay kullan, 10 ay öde" diye açıkça yazar ("2 ay ücretsiz" 14 aylık kullanım gibi
+ * anlaşılabiliyor); beta fiyatında admin paneldeki etiket kullanılır.
  */
-function campaignText(plan, price, yearly) {
-  const monthly = plan.prices.MONTHLY?.netPrice;
-  if (yearly && !price.highlight && monthly > 0) {
-    const months = price.netPrice / monthly;
-    if (Number.isInteger(months) && months < 12) return `12 ay kullan, ${months} ay öde`;
-  }
-  return price.campaignLabel;
+function campaignText(price, yearly) {
+  return yearly && !price.highlight && price.campaignLabel ? "12 ay kullan, 10 ay öde" : price.campaignLabel;
 }
 
 /** Üstü çizili fiyatın neyi temsil ettiği: aylık ödemede 12 ayın toplamı mı, kampanyasız normal fiyat mı. */
@@ -44,7 +39,7 @@ function PlanCard({ plan, yearly, index, compact, action, recommended }) {
   const otherYearly = !yearly ? plan.prices.YEARLY : null;
   const featured = price.highlight;
   const popular = recommended && !featured;
-  const campaign = campaignText(plan, price, yearly);
+  const campaign = campaignText(price, yearly);
   const perMonth = yearly ? price.netPrice / 12 : price.netPrice;
   const credits = price.credits !== undefined ? price.credits : plan.credits;
 
