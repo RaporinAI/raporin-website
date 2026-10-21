@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { trackDownload } from "../../../lib/analytics";
 
-const DOWNLOAD_URL = "https://downloads.raporin.com/RaporinAI-1.1.26.msi";
+const DOWNLOAD_URL = "https://downloads.raporin.com/RaporinAI-1.1.27.msi";
 
 export default function DownloadPageEN() {
   return (
