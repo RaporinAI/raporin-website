@@ -23,8 +23,11 @@ function fromCatalog(plans) {
           vatRate: price.vatRate,
           listPrice: price.listPrice,
           campaignLabel: price.campaignLabel,
+          // Kart notu (ör. rakiple karşılaştırma): büyük lansman fırsatında tasarruf satırının yerine
+          cardNote: price.cardNote ?? null,
+          cardNoteSource: price.cardNoteSource ?? null,
           badge: plan.badge,
-          // Beta hedef kitleli fiyat sitede sarı "özel fiyat" vurgusuyla gösterilir.
+          // Beta üyelerine özel fiyat: yalnızca hakkı olan eczaneye gelir, sarı "size özel" vurgusuyla gösterilir.
           highlight: price.audience === "BETA",
           purchasable: price.iyzicoLinked,
           credits: price.unlimited ? null : price.monthlyCredits,
@@ -55,7 +58,7 @@ function fromStatic() {
         MONTHLY: {
           id: null,
           netPrice: plan.monthly.price,
-          listPrice: null,
+          listPrice: plan.monthly.listPrice ?? null,
           campaignLabel: null,
           badge: plan.monthly.popular ? "Önerilen" : null,
           highlight: false,
@@ -65,7 +68,7 @@ function fromStatic() {
           id: null,
           netPrice: plan.yearly.price,
           listPrice: plan.yearly.listPrice,
-          campaignLabel: "2 ay ücretsiz",
+          campaignLabel: plan.yearly.campaignLabel ?? null,
           badge: plan.yearly.popular ? "Önerilen" : null,
           highlight: false,
           purchasable: false,
@@ -82,10 +85,14 @@ export const STATIC_CATALOG = {
   welcomeCreditDays: null,
   plans: fromStatic(),
   creditPack: null,
+  betaOfferEndsAt: null,
   fromBackend: false,
 };
 
-/** Tarayıcıdan çağrılır; hata durumunda statik kataloğa düşer. */
+/**
+ * Tarayıcıdan çağrılır; hata durumunda statik kataloğa düşer. Oturum açıksa katalog eczaneye göredir
+ * (beta üyesine beta fiyatları).
+ */
 export async function loadCatalog() {
   try {
     const response = await fetch("/api/pricing", { cache: "no-store" });
@@ -103,6 +110,8 @@ export async function loadCatalog() {
       plans,
       // Ek kredi satışta ise { minQuantity, maxQuantity, step, vatRate, validityMonths, fromUnitNetPrice, tiers }
       creditPack: body.purchaseEnabled ? (body.creditPack ?? null) : null,
+      // Giriş yapmış beta üyesine indirim süresince beta fiyatları gelir; indirimin son anı (geri sayım için)
+      betaOfferEndsAt: body.betaOfferEndsAt ?? null,
       fromBackend: true,
     };
   } catch {
@@ -112,6 +121,7 @@ export async function loadCatalog() {
 
 // Aynı sayfadaki bileşenler (üst bölüm, fiyatlandırma, rozetler) kataloğu bir kez ister; bir dakikadan eski
 // sonuç yeniden alınır, böylece admin panelde yapılan değişiklik sayfa yenilenmeden de kısa sürede görünür.
+// Giriş/çıkış sayfa değiştirerek yapıldığı için paylaşılan sonuç başka bir oturumun kataloğu olamaz.
 let shared = null;
 let sharedAt = 0;
 

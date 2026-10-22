@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Gift } from "lucide-react";
-import PlanCards, { BillingToggle } from "./pricing/PlanCards";
+import PlanCards, { BillingToggle, LaunchPricingNote, yearlyToggleProps } from "./pricing/PlanCards";
+import { BetaOfferStrip } from "./billing/BetaOffer";
 import { formatTL, loadCatalogShared, STATIC_CATALOG } from "../lib/billing/catalog";
 import { savePendingPurchase } from "../lib/billing/pendingPurchase";
 import { hasSessionFlag } from "../lib/auth/sessionFlag";
@@ -39,6 +40,7 @@ export default function PricingSection() {
           <h2 className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#17C6A3] to-[#0F918B]">
             Fiyatlandırma
           </h2>
+          <LaunchPricingNote plans={catalog.plans} betaEndsAt={catalog.betaOfferEndsAt} className="mt-2" />
           <p className="mt-3 text-gray-600">Eczanenizin reçete yoğunluğuna uygun paketi seçin.</p>
         </div>
 
@@ -55,10 +57,19 @@ export default function PricingSection() {
         )}
 
         <div className="mt-10">
-          <BillingToggle yearly={yearly} onChange={setYearly} />
+          <BillingToggle yearly={yearly} onChange={setYearly} {...yearlyToggleProps(catalog.plans)} />
         </div>
 
-        <PlanCards plans={catalog.plans} yearly={yearly} action={action} className="mt-12 md:grid-cols-3" />
+        {/* Yalnızca giriş yapmış beta üyesine, indirim süresince (katalog eczaneye göre gelir) */}
+        <BetaOfferStrip endsAt={catalog.betaOfferEndsAt} className="mx-auto mt-8 max-w-3xl" />
+
+        <PlanCards
+          plans={catalog.plans}
+          yearly={yearly}
+          action={action}
+          betaEndsAt={catalog.betaOfferEndsAt}
+          className="mt-12 md:grid-cols-3"
+        />
 
         {catalog.creditPack && (
           <p className="mx-auto mt-6 max-w-2xl text-center text-sm text-gray-600">

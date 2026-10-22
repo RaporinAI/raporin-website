@@ -16,6 +16,7 @@ import {
 } from "./PurchaseShell";
 import { billingApi, formatDate, LEGAL_VERSION, PERIOD_LABEL } from "../../lib/billing/billingApi";
 import { formatTL, formatTL2, loadCatalog } from "../../lib/billing/catalog";
+import { formatOfferEnd } from "../../lib/billing/betaOffer";
 import { readPendingPurchase } from "../../lib/billing/pendingPurchase";
 import { welcomeState } from "../../lib/billing/welcome";
 
@@ -42,7 +43,7 @@ const totals = (price) => {
 };
 
 /** Sol sütun: sipariş özeti. */
-function OrderSummary({ selection, welcome }) {
+function OrderSummary({ selection, welcome, betaEndsAt }) {
   const { plan, price, period } = selection;
   const { vatRate, gross, vat } = totals(price);
   const credits = price.credits ?? plan.credits;
@@ -126,6 +127,11 @@ function OrderSummary({ selection, welcome }) {
           Sonraki ödeme {formatDate(addPeriod(period))} tarihinde aynı karttan otomatik alınır. Dönem bitmeden
           iptal ederseniz tekrar ücret alınmaz.
         </p>
+        {price.highlight && betaEndsAt && (
+          <p className="rounded-xl bg-[#FFF8D6] px-3 py-2 text-xs font-medium text-[#5A3E00]">
+            Size özel %50 indirimli fiyat {formatOfferEnd(betaEndsAt)}&apos;a kadar alınabilir.
+          </p>
+        )}
         {welcome?.active && (
           <p className="rounded-xl bg-teal-50 px-3 py-2 text-xs text-teal-800">
             Paketiniz bugün başlar. Kalan {formatTL(welcome.remaining)} hoş geldin krediniz silinmez,{" "}
@@ -199,7 +205,7 @@ export default function CheckoutPage() {
       );
     } else {
       body = (
-        <PurchaseColumns summary={<OrderSummary selection={selection} welcome={welcomeState(billing)} />} step={payment ? 1 : 0}>
+        <PurchaseColumns summary={<OrderSummary selection={selection} welcome={welcomeState(billing)} betaEndsAt={catalog.betaOfferEndsAt} />} step={payment ? 1 : 0}>
           {payment ? (
             <PaymentStep
               content={payment.content}

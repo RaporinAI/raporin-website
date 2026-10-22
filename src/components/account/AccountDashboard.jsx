@@ -10,6 +10,7 @@ import TeamSection from "./TeamSection";
 import SubscriptionSection from "./SubscriptionSection";
 import { validateMobilePhone } from "../../lib/auth/validation";
 import { billingApi } from "../../lib/billing/billingApi";
+import { activeBetaOffer } from "../../lib/billing/betaOffer";
 
 const ADMIN_ROLES = ["PHARMACY_ADMIN", "SYSTEM_ADMIN"];
 
@@ -85,7 +86,8 @@ function useBilling() {
   const reload = useCallback(() => {
     billingApi.me().then((result) => {
       if (result.ok) {
-        setBilling(result.data);
+        // Alındığı an: beta indirimi geri sayımı sunucu saatiyle bilgisayar saati arasındaki farkı buna göre düzeltir.
+        setBilling({ ...result.data, receivedAt: Date.now() });
         setError(null);
       } else {
         setError("Paket bilgileri şu anda alınamadı. Lütfen sayfayı yenileyin.");
@@ -96,10 +98,33 @@ function useBilling() {
   return { billing, billingError: error, reloadBilling: reload };
 }
 
+// Masaüstündeki beta indirimi bandı bu adresi açar: paketler açılır ve indirimli pakete kaydırılır.
+const BETA_OFFER_HASH = "beta-indirimi";
+
+/** Paket kartları katalog gelince çizilir; indirimli kart (yoksa paket listesi) görünene kadar kısa süre bekler. */
+function scrollToBetaPlan(attempt = 0) {
+  const target = document.getElementById("beta-paket") ?? (attempt >= 15 ? document.getElementById("paketler-listesi") : null);
+  if (target) {
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  } else if (attempt < 15) {
+    window.setTimeout(() => scrollToBetaPlan(attempt + 1), 200);
+  }
+}
+
 /** Hesabım panosu: solda gezinme, sağda seçili bölüm. Veri çekme sayfadadır. */
 export default function AccountDashboard({ account, setAccount, onLogout, loggingOut }) {
   const [active, select] = useActiveSection();
   const { billing, billingError, reloadBilling } = useBilling();
+
+  useEffect(() => {
+    if (!billing || readHash() !== BETA_OFFER_HASH) return;
+    const status = billing.subscription?.status;
+    const live = ["ACTIVE", "PAST_DUE", "SUSPENDED"].includes(status);
+    // Paketi olan kullanıcı paketleri "Paketler ve fiyatlar"da, olmayan "Genel durum"un altında görür.
+    window.history.replaceState(null, "", `#${live ? "paketler" : "paket"}`);
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+    scrollToBetaPlan();
+  }, [billing]);
 
   const { profile, pharmacy } = account;
   const isAdmin = profile.roles?.some((role) => ADMIN_ROLES.includes(role.code));
@@ -119,9 +144,12 @@ export default function AccountDashboard({ account, setAccount, onLogout, loggin
     : null;
   const activeSection = packageView ? "paket" : active;
 
+  const betaOffer = billing ? activeBetaOffer(billing, billing.receivedAt) : null;
   const sections = SECTIONS.map((section) => ({
     ...section,
     badge: todos.filter((todo) => todo.section === section.id).length,
+    // Beta indirimi süresince Paketim'in yanında "%50" etiketi
+    tag: section.id === "paket" && betaOffer ? "%50" : undefined,
     children: section.id === "paket" ? packageViews : undefined,
   }));
 
@@ -157,6 +185,7 @@ export default function AccountDashboard({ account, setAccount, onLogout, loggin
               pharmacy={pharmacy}
               todos={todos}
               billing={billing}
+              betaOffer={betaOffer}
               isAdmin={profile.roles?.some((role) => role.code === "PHARMACY_ADMIN")}
               onNavigate={select}
             />

@@ -3,7 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 import { ArrowRight, FileText, Loader2, Pencil } from "lucide-react";
 import AccountCard from "./AccountCard";
 import { Alert } from "../auth/FormControls";
-import PlanCards, { BillingToggle } from "../pricing/PlanCards";
+import PlanCards, { BillingToggle, LaunchPricingNote, yearlyToggleProps } from "../pricing/PlanCards";
+import { BetaOfferStrip } from "../billing/BetaOffer";
 import CurrentPlanCard from "../billing/CurrentPlanCard";
 import CardUpdateDialog from "../billing/CardUpdateDialog";
 import PaymentHistory from "../billing/PaymentHistory";
@@ -256,7 +257,12 @@ export default function SubscriptionSection({ view, onNavigate, profile, pharmac
 
   const action = (plan, price) => {
     if (!purchaseOpen) return null;
-    if (subscription?.planPriceId === price.id && hasPaidSubscription) {
+    // Mevcut paket, paket ve periyoda göre bulunur: abonelik eski ya da indirimli (beta) bir fiyattan alınmış
+    // olabilir, kartta ise bugün satıştaki fiyat görünür.
+    const isCurrent =
+      subscription?.planPriceId === price.id ||
+      (subscription?.planCode === plan.key && plan.prices[subscription?.billingPeriod] === price);
+    if (isCurrent && hasPaidSubscription) {
       return { label: "Mevcut paketiniz", disabled: true };
     }
     if (hasPaidSubscription) {
@@ -308,10 +314,19 @@ export default function SubscriptionSection({ view, onNavigate, profile, pharmac
         <div>
           <h2 className="text-lg font-bold text-slate-900">{hasLiveSubscription ? "Paketler ve fiyatlar" : "Paketler"}</h2>
           <p className="mt-0.5 text-sm text-slate-500">{packagesNote}</p>
+          <LaunchPricingNote plans={plans} betaEndsAt={catalog?.betaOfferEndsAt} className="mt-3" />
         </div>
-        <BillingToggle yearly={yearly} onChange={setYearly} />
+        <BillingToggle yearly={yearly} onChange={setYearly} {...yearlyToggleProps(plans)} />
       </div>
-      <PlanCards plans={plans} yearly={yearly} compact action={action} className="mt-8 xl:grid-cols-3" />
+      <BetaOfferStrip endsAt={catalog?.betaOfferEndsAt} className="mt-6" />
+      <PlanCards
+        plans={plans}
+        yearly={yearly}
+        compact
+        action={action}
+        betaEndsAt={catalog?.betaOfferEndsAt}
+        className="mt-8 xl:grid-cols-3"
+      />
     </section>
   );
 

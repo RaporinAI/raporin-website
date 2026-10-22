@@ -32,7 +32,7 @@ export default function AccountSidebar({ profile, pharmacy, sections, active, ac
 
         <nav aria-label="Hesap bölümleri" className="-mx-1 mt-4 overflow-x-auto px-1 lg:mx-0 lg:mt-4 lg:overflow-visible lg:px-0">
           <ul className="flex gap-1.5 lg:flex-col lg:gap-1">
-            {sections.map(({ id, label, description, icon: Icon, badge, children }) => {
+            {sections.map(({ id, label, description, icon: Icon, badge, tag, children }) => {
               const isActive = id === active;
               return (
                 <li key={id} className="shrink-0">
@@ -60,6 +60,9 @@ export default function AccountSidebar({ profile, pharmacy, sections, active, ac
                             {badge}
                           </span>
                         ) : null}
+                        {tag && (
+                          <span className="rounded-full bg-[#FFD84D] px-1.5 text-[11px] font-extrabold text-[#5A3E00]">{tag}</span>
+                        )}
                       </span>
                       <span className="hidden text-xs text-slate-400 lg:block">{description}</span>
                     </span>

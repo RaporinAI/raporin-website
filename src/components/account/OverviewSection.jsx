@@ -9,6 +9,7 @@ import { clearPendingPurchase } from "../../lib/billing/pendingPurchase";
 import { formatTL } from "../../lib/billing/catalog";
 import { formatDate, PERIOD_LABEL } from "../../lib/billing/billingApi";
 import { daysLeftLabel, welcomeState } from "../../lib/billing/welcome";
+import { BetaOfferCard } from "../billing/BetaOffer";
 
 const dateFormatter = new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "long", year: "numeric" });
 
@@ -130,12 +131,21 @@ function WelcomeBanner({ welcome, onNavigate }) {
  * uygulaması, paket) dikey bir akışta; hepsi tamamlanınca yerini kısa bir paket ve uygulama özeti
  * alır. Yeni eczane hoş geldin kredisiyle önce uygulamayı kurup dener, sonra paketini seçer.
  */
-export default function OverviewSection({ profile, pharmacy, todos, billing, isAdmin, onNavigate }) {
+export default function OverviewSection({ profile, pharmacy, todos, billing, betaOffer, isAdmin, onNavigate }) {
   const firstName = (profile.displayName || profile.username || "").split(/\s+/)[0];
   const pending = usePendingSelection(billing);
   const plan = describePlan(billing);
   const subscription = billing?.subscription;
   const usableSubscription = subscription && ["ACTIVE", "PAST_DUE"].includes(subscription.status);
+  // Paketi olan kullanıcı paketleri "Paketler ve fiyatlar"da, olmayan "Genel durum"un altında görür.
+  const selectBetaPlan = () => {
+    const live = subscription && ["ACTIVE", "PAST_DUE", "SUSPENDED"].includes(subscription.status);
+    onNavigate(live ? "paketler" : "paket");
+    window.setTimeout(() => {
+      const target = document.getElementById("beta-paket") ?? document.getElementById("paketler-listesi");
+      target?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 150);
+  };
   const profileTodos = todos.filter((todo) => todo.section !== "paket");
   // Paketi olan eczaneye hoş geldin kredisi ayrıca gösterilmez (kalanı bakiyede sayılır).
   const welcome = subscription ? null : welcomeState(billing);
@@ -212,6 +222,8 @@ export default function OverviewSection({ profile, pharmacy, todos, billing, isA
               : "RaporinAI'yi kullanmaya başlamak için birkaç adım kaldı."}
         </p>
       </div>
+
+      {betaOffer && <BetaOfferCard offer={betaOffer} isAdmin={isAdmin} onSelectPlan={selectBetaPlan} />}
 
       {welcome && <WelcomeBanner welcome={welcome} onNavigate={onNavigate} />}
 
