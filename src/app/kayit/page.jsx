@@ -34,6 +34,7 @@ const STEP_FIELDS = {
 const ERROR_FIELDS = {
   REG_002: "email",
   REG_003: "password",
+  REG_010: "phone",
   REG_008: "gln",
   REG_009: "gln",
   LOC_001: "cityId",
@@ -118,6 +119,7 @@ export default function SignupPage() {
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [checking, setChecking] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState(null);
   const formRef = useRef(null);
 
@@ -168,6 +170,31 @@ export default function SignupPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  /**
+   * 1. adımdan çıkmadan e-posta ve cep telefonunun başka bir hesapta kayıtlı olmadığını sorar. Sunucuya
+   * ulaşılamazsa geçer; kayıt aynı kontrolü yapar.
+   */
+  const checkContact = async () => {
+    setChecking(true);
+    try {
+      const response = await postJson("/api/auth/check-registration", {
+        email: form.email.trim(),
+        phone: normalizePhone(form.phone),
+      });
+      if (response.ok) return true;
+      const { code, message } = await readApiError(response);
+      const field = ERROR_FIELDS[code];
+      if (!field) return true;
+      setErrors((prev) => ({ ...prev, [field]: message }));
+      formRef.current?.querySelector(`[name="${field}"]`)?.focus();
+      return false;
+    } catch {
+      return true;
+    } finally {
+      setChecking(false);
+    }
+  };
+
   const register = async () => {
     setSubmitting(true);
     setFormError("");
@@ -215,11 +242,11 @@ export default function SignupPage() {
     }
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     if (!validateStep(step)) return;
-    if (step === 1) goToStep(2);
-    else register();
+    if (step === 2) register();
+    else if (await checkContact()) goToStep(2);
   };
 
   if (registeredEmail) {
@@ -291,7 +318,7 @@ export default function SignupPage() {
             <Field id="password" label="Şifre" error={errors.password} hint="En az 8 karakter, en az bir harf ve bir rakam">
               <PasswordInput {...fieldProps("password")} autoComplete="new-password" />
             </Field>
-            <SubmitButton>
+            <SubmitButton loading={checking}>
               Devam et <ArrowRight size={18} aria-hidden="true" />
             </SubmitButton>
           </>
