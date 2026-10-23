@@ -54,6 +54,11 @@ export async function trackSignUp(source, user) {
   pushEvent({ user_data: undefined, meta_user_data: undefined });
 }
 
+/** Sağ alttaki WhatsApp destek butonuna tıklama; page_path hangi sayfadan yazıldığını taşır. */
+export function trackWhatsAppClick(pagePath) {
+  pushEvent({ event: "whatsapp_click", page_path: pagePath });
+}
+
 /** Web sitesinden başarılı giriş. */
 export function trackLogin() {
   pushEvent({ event: "login", method: "email" });
