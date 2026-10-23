@@ -4,16 +4,13 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { trackWhatsAppClick, trackWhatsAppOpen } from "../lib/analytics";
-
-// Şirket WhatsApp hattı (Chatwoot'a bağlı). Ülke koduyla, yalnızca rakam: 90XXXXXXXXXX.
-export const WHATSAPP_NUMBER = "905304711322";
+import { WHATSAPP_NUMBER } from "../lib/contact";
 
 const TEXT = {
   tr: {
     label: "WhatsApp ile destek alın",
     close: "Kapat",
     name: "RaporinAI Destek",
-    status: "Genellikle birkaç dakika içinde yanıt verir",
     greeting: "Merhaba 👋\nRaporinAI'a hoş geldiniz. Size nasıl yardımcı olabiliriz?",
     placeholder: "Mesajınızı yazın…",
     send: "WhatsApp'ta gönder",
@@ -23,7 +20,6 @@ const TEXT = {
     label: "Chat with us on WhatsApp",
     close: "Close",
     name: "RaporinAI Support",
-    status: "Typically replies within a few minutes",
     greeting: "Hi there 👋\nWelcome to RaporinAI. How can we help you?",
     placeholder: "Type your message…",
     send: "Send on WhatsApp",
@@ -107,7 +103,6 @@ export default function WhatsAppButton() {
               </div>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-semibold">{t.name}</p>
-                <p className="truncate text-xs text-white/80">{t.status}</p>
               </div>
               <button
                 type="button"
