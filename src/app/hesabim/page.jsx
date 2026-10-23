@@ -16,11 +16,22 @@ export default function AccountPage() {
       .then(async (response) => {
         if (cancelled) return;
         if (response.status === 401) {
-          router.replace("/giris?next=/hesabim");
+          // Giriş sonrası aynı yere dönülür (ör. fiyatlandırmadan gelen ?paket=…#paket).
+          const back = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+          router.replace(`/giris?next=${encodeURIComponent(back)}`);
           return;
         }
         if (!response.ok) throw new Error(String(response.status));
-        setAccount(await response.json());
+        const data = await response.json();
+        if (cancelled) return;
+        // Eski "?paket=" bağlantıları ödeme sayfasına gider. Kayıt/giriş sonrası saklanan seçim ise
+        // genel bakışta "Satın almayı tamamla" kartı olarak gösterilir.
+        const requested = new URLSearchParams(window.location.search).get("paket");
+        if (requested) {
+          router.replace(`/hesabim/satin-al?paket=${requested}`);
+          return;
+        }
+        setAccount(data);
       })
       .catch(() => !cancelled && setError(true));
     return () => {

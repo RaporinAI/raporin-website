@@ -6,17 +6,21 @@ import { Alert, Field, PasswordInput, SubmitButton, TextInput } from "../../comp
 import ResendVerification from "../../components/auth/ResendVerification";
 import { hasSessionFlag } from "../../lib/auth/sessionFlag";
 import { trackLogin } from "../../lib/analytics";
+import { usePendingPurchase } from "../../lib/billing/pendingPurchase";
+import SelectedPlanNotice from "../../components/billing/SelectedPlanNotice";
 
 const EMAIL_NOT_VERIFIED = "AUTH_008";
 
 /** ?next= yalnızca site içi bir yola izin verir (açık yönlendirme olmasın). */
 function nextPath() {
   const next = new URLSearchParams(window.location.search).get("next");
+  // Paket seçilip gelindiyse de önce Hesabım açılır; seçilen paket orada "Satın almayı tamamla" kartıyla durur.
   return next && next.startsWith("/") && !next.startsWith("//") ? next : "/hesabim";
 }
 
 export default function LoginPage() {
   const router = useRouter();
+  const pendingPurchase = usePendingPurchase();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null); // { code, message }
@@ -60,9 +64,14 @@ export default function LoginPage() {
   return (
     <AuthShell
       title="Giriş yapın"
-      subtitle="Hesabınıza giriş yaparak üyelik bilgilerinizi görün ve uygulamayı indirin."
+      subtitle={
+        pendingPurchase
+          ? "Giriş yaptıktan sonra seçtiğiniz paketi hesabınızdan satın alabilirsiniz."
+          : "Hesabınıza giriş yaparak üyelik bilgilerinizi görün ve uygulamayı indirin."
+      }
       footer={<>Hesabınız yok mu? <AuthLink href="/kayit">Ücretsiz kayıt olun</AuthLink></>}
     >
+      <SelectedPlanNotice />
       <form onSubmit={onSubmit} noValidate className="space-y-5">
         {error && (
           <Alert>

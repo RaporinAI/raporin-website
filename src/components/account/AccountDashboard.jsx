@@ -1,6 +1,6 @@
 "use client";
-import { useSyncExternalStore } from "react";
-import { Building2, LayoutDashboard, Package, ShieldCheck, UserRound, Users } from "lucide-react";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+import { AlertTriangle, Building2, LayoutDashboard, Package, ShieldCheck, UserRound, Users } from "lucide-react";
 import AccountSidebar from "./AccountSidebar";
 import OverviewSection from "./OverviewSection";
 import ProfileForm from "./ProfileForm";
@@ -9,6 +9,8 @@ import PharmacyForm from "./PharmacyForm";
 import TeamSection from "./TeamSection";
 import SubscriptionSection from "./SubscriptionSection";
 import { validateMobilePhone } from "../../lib/auth/validation";
+import { billingApi } from "../../lib/billing/billingApi";
+import { activeBetaOffer } from "../../lib/billing/betaOffer";
 
 const ADMIN_ROLES = ["PHARMACY_ADMIN", "SYSTEM_ADMIN"];
 
@@ -21,6 +23,20 @@ const SECTIONS = [
   { id: "ekip", label: "Ekip", description: "Üyeler ve ünvanlar", icon: Users },
 ];
 
+/**
+ * Paketim'in alt sayfaları. Görünürlük kullanıcının durumuna göre değişir: paketi olmayan kullanıcı
+ * paketleri zaten Genel durum'da görür; fatura bilgisini yalnızca eczane yöneticisi düzenler; ödeme
+ * geçmişi ücretli paketi olanda ya da ek kredi alabilen (panelden paket atanmış) eczane yöneticisinde vardır.
+ */
+const PACKAGE_VIEWS = [
+  { id: "paket", label: "Genel durum" },
+  { id: "kredi", label: "Kredi kullanımı" },
+  { id: "paketler", label: "Paketler ve fiyatlar", visible: ({ hasLiveSubscription }) => hasLiveSubscription },
+  { id: "fatura", label: "Fatura bilgileri", visible: ({ isPharmacyAdmin }) => isPharmacyAdmin },
+  { id: "odemeler", label: "Ödeme geçmişi", visible: ({ paid }) => paid },
+];
+const PACKAGE_VIEW_IDS = PACKAGE_VIEWS.map((view) => view.id);
+
 // Açık bölüm adreste (#kisisel gibi) tutulur: geri tuşu ve paylaşılan link aynı bölümü açar.
 const subscribeHash = (callback) => {
   window.addEventListener("hashchange", callback);
@@ -30,7 +46,7 @@ const readHash = () => window.location.hash.slice(1);
 
 function useActiveSection() {
   const hash = useSyncExternalStore(subscribeHash, readHash, () => "");
-  const active = SECTIONS.some((s) => s.id === hash) ? hash : "genel";
+  const active = SECTIONS.some((s) => s.id === hash) || PACKAGE_VIEW_IDS.includes(hash) ? hash : "genel";
   const select = (id) => {
     if (id !== readHash()) window.location.hash = id;
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -38,9 +54,21 @@ function useActiveSection() {
   return [active, select];
 }
 
-/** Eksik bilgiler: genel bakıştaki yapılacaklar listesi ve menüdeki sayaçlar. */
-function buildTodos(profile, pharmacy, isAdmin) {
+/** Eksik bilgiler ve ödeme sorunları: genel bakıştaki yapılacaklar listesi ve menüdeki sayaçlar. */
+function buildTodos(profile, pharmacy, isAdmin, billing) {
   const todos = [];
+  const status = billing?.subscription?.status;
+  if (status === "PAST_DUE" || status === "SUSPENDED") {
+    todos.push({
+      section: "paket",
+      text: isAdmin
+        ? "Abonelik ödemeniz alınamadı; ödeme kartınızı güncelleyin"
+        : "Abonelik ödemesi alınamadı; eczane yöneticinize bildirin",
+    });
+  }
+  if (!billing?.subscription && billing?.welcome && !billing.welcome.active && (billing.credits?.available ?? 0) === 0) {
+    todos.push({ section: "paket", text: "Hoş geldin krediniz bitti; analizlere devam etmek için paket seçin" });
+  }
   if (validateMobilePhone(profile.phone || "")) {
     todos.push({ section: "kisisel", text: "Cep telefonu numaranızı ekleyin" });
   }
@@ -51,16 +79,78 @@ function buildTodos(profile, pharmacy, isAdmin) {
   return todos;
 }
 
+/** Paket ve kredi bilgisi; genel bakış ve Paketim bölümü ortak kullanır. */
+function useBilling() {
+  const [billing, setBilling] = useState(null);
+  const [error, setError] = useState(null);
+  const reload = useCallback(() => {
+    billingApi.me().then((result) => {
+      if (result.ok) {
+        // Alındığı an: beta indirimi geri sayımı sunucu saatiyle bilgisayar saati arasındaki farkı buna göre düzeltir.
+        setBilling({ ...result.data, receivedAt: Date.now() });
+        setError(null);
+      } else {
+        setError("Paket bilgileri şu anda alınamadı. Lütfen sayfayı yenileyin.");
+      }
+    });
+  }, []);
+  useEffect(reload, [reload]);
+  return { billing, billingError: error, reloadBilling: reload };
+}
+
+// Masaüstündeki beta indirimi bandı bu adresi açar: paketler açılır ve indirimli pakete kaydırılır.
+const BETA_OFFER_HASH = "beta-indirimi";
+
+/** Paket kartları katalog gelince çizilir; indirimli kart (yoksa paket listesi) görünene kadar kısa süre bekler. */
+function scrollToBetaPlan(attempt = 0) {
+  const target = document.getElementById("beta-paket") ?? (attempt >= 15 ? document.getElementById("paketler-listesi") : null);
+  if (target) {
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  } else if (attempt < 15) {
+    window.setTimeout(() => scrollToBetaPlan(attempt + 1), 200);
+  }
+}
+
 /** Hesabım panosu: solda gezinme, sağda seçili bölüm. Veri çekme sayfadadır. */
 export default function AccountDashboard({ account, setAccount, onLogout, loggingOut }) {
   const [active, select] = useActiveSection();
+  const { billing, billingError, reloadBilling } = useBilling();
+
+  useEffect(() => {
+    if (!billing || readHash() !== BETA_OFFER_HASH) return;
+    const status = billing.subscription?.status;
+    const live = ["ACTIVE", "PAST_DUE", "SUSPENDED"].includes(status);
+    // Paketi olan kullanıcı paketleri "Paketler ve fiyatlar"da, olmayan "Genel durum"un altında görür.
+    window.history.replaceState(null, "", `#${live ? "paketler" : "paket"}`);
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+    scrollToBetaPlan();
+  }, [billing]);
 
   const { profile, pharmacy } = account;
   const isAdmin = profile.roles?.some((role) => ADMIN_ROLES.includes(role.code));
-  const todos = buildTodos(profile, pharmacy, isAdmin);
+  const isPharmacyAdmin = profile.roles?.some((role) => role.code === "PHARMACY_ADMIN");
+  const todos = buildTodos(profile, pharmacy, isAdmin, billing);
+
+  const subscription = billing?.subscription;
+  const packageState = {
+    hasLiveSubscription: Boolean(subscription && ["ACTIVE", "PAST_DUE", "SUSPENDED"].includes(subscription.status)),
+    isPharmacyAdmin,
+    paid: subscription?.source === "IYZICO" || Boolean(isPharmacyAdmin && billing?.actions?.canBuyCredits),
+  };
+  const packageViews = PACKAGE_VIEWS.filter((view) => !view.visible || view.visible(packageState));
+  // Gizli bir alt sayfa istenirse (ör. paketi olmayan kullanıcıda #paketler) Genel durum açılır
+  const packageView = PACKAGE_VIEW_IDS.includes(active)
+    ? packageViews.some((view) => view.id === active) ? active : "paket"
+    : null;
+  const activeSection = packageView ? "paket" : active;
+
+  const betaOffer = billing ? activeBetaOffer(billing, billing.receivedAt) : null;
   const sections = SECTIONS.map((section) => ({
     ...section,
     badge: todos.filter((todo) => todo.section === section.id).length,
+    // Beta indirimi süresince Paketim'in yanında "%50" etiketi
+    tag: section.id === "paket" && betaOffer ? "%50" : undefined,
+    children: section.id === "paket" ? packageViews : undefined,
   }));
 
   const setProfile = (next) => setAccount((prev) => ({ ...prev, profile: next }));
@@ -68,7 +158,7 @@ export default function AccountDashboard({ account, setAccount, onLogout, loggin
 
   // Bölümler gizlenerek değiştirilir, kaldırılmaz: yarım kalan düzenlemeler bölüm değişince kaybolmaz.
   const panel = (id, children) => (
-    <div hidden={active !== id}>
+    <div hidden={activeSection !== id}>
       {children}
     </div>
   );
@@ -80,15 +170,39 @@ export default function AccountDashboard({ account, setAccount, onLogout, loggin
           profile={profile}
           pharmacy={pharmacy}
           sections={sections}
-          active={active}
+          active={activeSection}
+          activeChild={packageView}
           onSelect={select}
           onLogout={onLogout}
           loggingOut={loggingOut}
         />
 
         <div className="min-w-0">
-          {panel("genel", <OverviewSection profile={profile} pharmacy={pharmacy} todos={todos} onNavigate={select} />)}
-          {panel("paket", <SubscriptionSection />)}
+          {panel(
+            "genel",
+            <OverviewSection
+              profile={profile}
+              pharmacy={pharmacy}
+              todos={todos}
+              billing={billing}
+              betaOffer={betaOffer}
+              isAdmin={profile.roles?.some((role) => role.code === "PHARMACY_ADMIN")}
+              onNavigate={select}
+            />
+          )}
+          {panel(
+            "paket",
+            <SubscriptionSection
+              view={packageView ?? "paket"}
+              onNavigate={select}
+              profile={profile}
+              pharmacy={pharmacy}
+              isAdmin={isPharmacyAdmin}
+              billing={billing}
+              billingError={billingError}
+              reloadBilling={reloadBilling}
+            />
+          )}
           {panel("kisisel", <ProfileForm profile={profile} onSaved={setProfile} />)}
           {panel("guvenlik", <PasswordForm />)}
           {panel(

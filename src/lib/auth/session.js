@@ -145,7 +145,7 @@ export function isSameOrigin(request) {
  * Oturumdaki kullanıcı adına bir JSON değişiklik isteğini backend'e iletir ve backend'in
  * yanıtını (hata gövdesi dahil) olduğu gibi döndürür.
  */
-export async function forwardAsUser(request, path, method = "PUT") {
+export async function forwardAsUser(request, path, method = "PUT", headers = undefined) {
   // Okuma istekleri değişiklik yapmaz; tarayıcı aynı kökenli GET'te Origin başlığı da göndermez.
   const isRead = method === "GET";
   if (!isRead && !isSameOrigin(request)) {
@@ -155,7 +155,7 @@ export async function forwardAsUser(request, path, method = "PUT") {
 
   let call;
   try {
-    call = await callAsUser((accessToken) => backendFetch(path, { method, body, accessToken }));
+    call = await callAsUser((accessToken) => backendFetch(path, { method, body, accessToken, headers }));
   } catch {
     return NextResponse.json({ message: "Sunucuya ulaşılamadı. Lütfen tekrar deneyin." }, { status: 502 });
   }

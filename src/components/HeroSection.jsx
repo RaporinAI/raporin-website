@@ -3,9 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useReducedMotion } from "framer-motion";
-import { ArrowRight, BadgeCheck, ChartNoAxesColumnIncreasing, CheckCircle2, Link2, PlayCircle, Plus, ShieldCheck, Sparkles, Store, TriangleAlert, XCircle } from "lucide-react";
+import { ArrowRight, Gift, ChartNoAxesColumnIncreasing, CheckCircle2, Link2, PlayCircle, Plus, ShieldCheck, Sparkles, Store, TriangleAlert, XCircle } from "lucide-react";
 import styles from "./HeroSection.module.css";
 import HeroDemo, { DEMO_SCENES } from "./HeroDemo";
+import { formatTL } from "../lib/billing/catalog";
+import { useWelcomeOffer } from "../lib/billing/useWelcomeOffer";
 
 export default function HeroSection() {
   const reduceMotion = useReducedMotion();
@@ -16,6 +18,7 @@ export default function HeroSection() {
   // Hareket azaltma tercihinde, kullanıcı bir adım seçene kadar son (sonuç) sahnesi sabit gösterilir.
   const scene = pickedScene ?? (reduceMotion ? DEMO_SCENES.length - 1 : 0);
   const activeScene = DEMO_SCENES[scene];
+  const offer = useWelcomeOffer();
 
   // Demo yalnızca ekranda görünürken döner.
   useEffect(() => {
@@ -63,27 +66,50 @@ export default function HeroSection() {
               <li><span className={styles.benefitIcon}><ShieldCheck aria-hidden="true" size={19} /></span>Doz kontrolü</li>
             </ul>
 
-            <div className={styles.actions}>
-              <Link href="/kayit" className={styles.primary}>
-                Ücretsiz başla
-                <ArrowRight aria-hidden="true" size={19} />
-              </Link>
-              <a href="#nasil-calisir" className={styles.secondary}>
-                <PlayCircle aria-hidden="true" size={22} />
+            {offer?.credits > 0 ? (
+              // Tek odak: hoş geldin hediyesi + kayıt düğmesi bir arada. Miktar admin panelden gelir; kredi kapalıysa
+              // ya da bilinmiyorsa yalnızca düğme çizilir.
+              <div className={styles.offer}>
+                <span className={styles.offerIcon}>
+                  <Gift aria-hidden="true" size={24} />
+                </span>
+                <div className={styles.offerText}>
+                  <p className={styles.offerLabel}>Hoş geldin hediyesi</p>
+                  <p className={styles.offerAmount}>
+                    <span>{formatTL(offer.credits)} kredi</span> ücretsiz
+                  </p>
+                  <p className={styles.offerNote}>Kredi kartı gerekmez</p>
+                </div>
+                <Link href="/kayit" className={`${styles.primary} ${styles.offerButton}`}>
+                  Ücretsiz kayıt ol
+                  <ArrowRight aria-hidden="true" size={19} />
+                </Link>
+              </div>
+            ) : (
+              <div className={styles.actions}>
+                <Link href="/kayit" className={styles.primary}>
+                  Ücretsiz başla
+                  <ArrowRight aria-hidden="true" size={19} />
+                </Link>
+              </div>
+            )}
+            <div className={styles.meta}>
+              <a href="#nasil-calisir" className={styles.watch}>
+                <PlayCircle aria-hidden="true" size={20} />
                 Nasıl çalıştığını gör
               </a>
-            </div>
-            <div className={styles.socialProof}>
-              <div className={styles.pharmacyIcons} aria-hidden="true">
-                <span><Store size={23} /></span>
-                <span><Store size={23} /></span>
-                <span><Store size={23} /></span>
+              <span className={styles.metaDivider} aria-hidden="true" />
+              <div className={styles.proof}>
+                <span className={styles.pharmacyIcons} aria-hidden="true">
+                  <span><Store size={19} /></span>
+                  <span><Store size={19} /></span>
+                  <span><Store size={19} /></span>
+                </span>
+                <p>
+                  <strong>1.000+</strong> eczane
+                  <span>RaporinAI kullanıyor</span>
+                </p>
               </div>
-              <div className={styles.proofText}>
-                <p><strong>1.000+</strong> <span>eczane</span></p>
-                <p>Reçete ve rapor kontrolünde RaporinAI kullanıyor.</p>
-              </div>
-              <BadgeCheck aria-hidden="true" className={styles.proofBadge} size={25} />
             </div>
           </div>
 

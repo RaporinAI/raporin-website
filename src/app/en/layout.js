@@ -8,11 +8,11 @@ export const metadata = {
   title: {
     // `absolute`, kök layout'un "%s | RaporinAI" şablonunu devre dışı bırakır;
     // aksi hâlde başlık "... Platform | RaporinAI" şeklinde markayı iki kez taşır.
-    absolute: "RaporinAI — FREE AI-Powered Pharmacy Report Verification Platform",
+    absolute: "RaporinAI — AI-Powered Pharmacy Report Verification Platform",
     template: "%s | RaporinAI"
   },
   description:
-    "RaporinAI is an AI-powered pharmacy report verification platform with insurance portal integration. Import a whole claim period, analyze every reported medicine in one click, and prevent insurance deductions before you submit. Free during beta.",
+    "RaporinAI is an AI-powered pharmacy report verification platform with insurance portal integration. Import a whole claim period, analyze every reported medicine in one click, and prevent insurance deductions before you submit.",
   keywords: [
     "Pharmacy Report Verification",
     "insurance portal integration",
@@ -57,7 +57,7 @@ export const metadata = {
     type: "website",
     locale: "en_US",
     url: "https://raporin.com/en",
-    title: "RaporinAI — FREE AI-Powered Pharmacy Report Verification Platform",
+    title: "RaporinAI — AI-Powered Pharmacy Report Verification Platform",
     description:
       "Import a whole claim period from the insurance portal and analyze every reported medicine in one click. Detect report errors in seconds and prevent insurance deductions.",
     siteName: "RaporinAI",
@@ -72,7 +72,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "RaporinAI — FREE AI-Powered Pharmacy Report Verification Platform",
+    title: "RaporinAI — AI-Powered Pharmacy Report Verification Platform",
     description:
       "Import a whole claim period from the insurance portal and analyze every reported medicine in one click.",
     images: ["/og-image.png"],

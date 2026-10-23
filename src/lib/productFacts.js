@@ -1,3 +1,5 @@
+import { PRICING_PLANS } from "./pricingPlans";
+
 export const SITE_URL = "https://raporin.com";
 
 // SoftwareApplication ve llms.txt için kamuya açık ürün bilgileri.
@@ -11,7 +13,7 @@ export const product = {
     { label: "Veri aktarımı", value: "Medula’dan reçete aktarımı veya PDF rapor yükleme" },
     { label: "Kontrol kapsamı", value: "SUT kriterleri, rapor koşulları ve reçete–rapor doz uyumu" },
     { label: "Çalışma biçimi", value: "Tekil ilaç analizi ve fatura dönemindeki raporlu ilaçların toplu analizi" },
-    { label: "Ücret", value: "Beta süresince ücretsiz; kredi kartı gerekmez. Beta sonrası koşullar ayrıca duyurulur." },
+    { label: "Ücret", value: "Aylık veya yıllık abonelik paketleri; hesap oluşturmak ücretsizdir ve kredi kartı gerekmez." },
   ],
   features: [
     "Medula’dan reçete aktarımı",
@@ -37,11 +39,29 @@ export const softwareSchema = {
   downloadUrl: `${SITE_URL}/indir`,
   screenshot: `${SITE_URL}/screens/toplu-analiz.png`,
   featureList: product.features,
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "TRY",
-    description: "Beta süresince ücretsiz; beta sonrası koşullar ayrıca duyurulur.",
-    url: `${SITE_URL}/ucretsiz-eczane-rapor-programi`,
-  },
+  offers: monthlyOffers(),
 };
+
+/**
+ * Aylık paket fiyat aralığı (KDV hariç, sitede gösterildiği gibi). Fiyatlar admin panelden
+ * değiştirildiğinde pricingPlans.js de güncellenmeli; şemadaki fiyat sayfadakiyle çelişmemeli.
+ */
+function monthlyOffers() {
+  const prices = PRICING_PLANS.map((plan) => plan.monthly.price);
+  return {
+    "@type": "AggregateOffer",
+    priceCurrency: "TRY",
+    lowPrice: Math.min(...prices),
+    highPrice: Math.max(...prices),
+    offerCount: prices.length,
+    priceSpecification: {
+      "@type": "UnitPriceSpecification",
+      priceCurrency: "TRY",
+      price: Math.min(...prices),
+      unitCode: "MON",
+      valueAddedTaxIncluded: false,
+    },
+    description: "Aylık ve yıllık abonelik paketleri (KDV hariç). Hesap oluşturmak ücretsizdir.",
+    url: `${SITE_URL}/#fiyatlandirma`,
+  };
+}

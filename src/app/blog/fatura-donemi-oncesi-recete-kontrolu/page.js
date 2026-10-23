@@ -263,11 +263,11 @@ export default function BlogPost() {
                     </p>
 
                     <div className="bg-teal-50 border-l-4 border-teal-500 p-6 !mt-10 rounded-r-lg">
-                        <h3 className="text-lg font-bold text-teal-800 mb-2">RaporinAI&apos;ı ücretsiz deneyin</h3>
+                        <h3 className="text-lg font-bold text-teal-800 mb-2">RaporinAI ile tanışın</h3>
                         <p className="text-teal-700 mb-3 text-base">
                             RaporinAI ile Medula&apos;daki reçetelerinizi tek tek veya toplu olarak analiz edebilir, raporlu ilaçları SUT kriterlerine göre kontrol edebilirsiniz.
                         </p>
-                        <p className="text-teal-700 mb-3 text-base">Beta sürecinde tüm özellikleri ücretsiz kullanabilirsiniz.</p>
+                        <p className="text-teal-700 mb-3 text-base">Hesap oluşturmak ücretsizdir; eczanenize uygun paketi hesabınızdan seçebilirsiniz.</p>
                         <p className="text-teal-800 font-semibold mb-4 text-base">
                             RaporinAI&apos;ı indirin, Medula&apos;ya bağlanın ve fatura döneminizi kapatmadan önce reçetelerinizi kontrol edin.
                         </p>

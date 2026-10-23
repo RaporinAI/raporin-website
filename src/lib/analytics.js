@@ -68,3 +68,93 @@ export function trackWhatsAppClick(pagePath) {
 export function trackLogin() {
   pushEvent({ event: "login", method: "email" });
 }
+
+// --- GA4 e-ticaret olayları (iyzico ödeme akışı) ---
+// Tutarlar KDV dahil, TRY. Önceki e-ticaret nesnesi GA4 önerisi gereği her olaydan önce temizlenir.
+const CURRENCY = "TRY";
+// iyzico formu açılırken ürün checkoutId ile saklanır; ödeme dönüşündeki purchase aynı ürünü raporlar.
+const PENDING_ITEMS_KEY = "raporin_checkout_items";
+const REPORTED_PURCHASES_KEY = "raporin_reported_purchases";
+
+function pushEcommerce(event, ecommerce) {
+  pushEvent({ ecommerce: null });
+  pushEvent({ event, ecommerce });
+}
+
+function readList(key, fallback) {
+  try {
+    return JSON.parse(window.localStorage.getItem(key)) || fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function writeList(key, value) {
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // Local storage kapalıysa tekilleştirme GA4'ün transaction_id kontrolüne kalır.
+  }
+}
+
+const toValue = (amount) => Math.round(Number(amount) * 100) / 100;
+
+/**
+ * @typedef {{ id: string, name: string, category: string }} CheckoutItem
+ * id ör. "profesyonel_YEARLY" veya "credit_pack_500"; category: SUBSCRIPTION | UPGRADE | PERIOD_CHANGE | CREDIT_PACK
+ */
+function ecommerceOf(item, amount) {
+  const value = toValue(amount);
+  return {
+    currency: CURRENCY,
+    value,
+    items: [{ item_id: item.id, item_name: item.name, item_category: item.category, price: value, quantity: 1 }],
+  };
+}
+
+/** Ödeme sayfası (fatura bilgileri adımı) bir ürünle açıldığında. */
+export function trackBeginCheckout(item, amount) {
+  if (typeof window === "undefined") return;
+  pushEcommerce("begin_checkout", ecommerceOf(item, amount));
+}
+
+/** Fatura bilgileri onaylanıp iyzico kart formu açıldığında. */
+export function trackAddPaymentInfo(item, amount, checkoutId) {
+  if (typeof window === "undefined") return;
+  pushEcommerce("add_payment_info", { ...ecommerceOf(item, amount), payment_type: "iyzico" });
+  if (checkoutId != null) {
+    const pending = readList(PENDING_ITEMS_KEY, {});
+    const recent = Object.entries({ ...pending, [checkoutId]: item }).slice(-10);
+    writeList(PENDING_ITEMS_KEY, Object.fromEntries(recent));
+  }
+}
+
+/**
+ * Backend ödemeyi COMPLETED olarak doğruladıktan sonra çağrılır (kart güncelleme hariç). Aynı işlem
+ * (checkoutId) bu tarayıcıda ikinci kez raporlanmaz; GA4 ayrıca transaction_id ile de tekilleştirir.
+ *
+ * @param {{ checkoutId: number, kind: string, description?: string, amount: number, credits?: number }} checkout
+ */
+export function trackPurchase(checkout) {
+  if (typeof window === "undefined" || checkout.amount == null) return;
+
+  const transactionId = String(checkout.checkoutId);
+  const reported = readList(REPORTED_PURCHASES_KEY, []);
+  if (reported.includes(transactionId)) return;
+
+  const pending = readList(PENDING_ITEMS_KEY, {});
+  const item = pending[transactionId] ?? {
+    id: checkout.kind,
+    name: checkout.description || checkout.kind,
+    category: checkout.kind,
+  };
+  pushEcommerce("purchase", {
+    transaction_id: transactionId,
+    ...ecommerceOf(item, checkout.amount),
+    ...(checkout.credits ? { credits: checkout.credits } : {}),
+  });
+
+  delete pending[transactionId];
+  writeList(PENDING_ITEMS_KEY, pending);
+  writeList(REPORTED_PURCHASES_KEY, [...reported, transactionId].slice(-20));
+}

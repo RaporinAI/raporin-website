@@ -1,6 +1,6 @@
 export const metadata = {
   title: "Download App",
-  description: "Download the RaporinAI desktop application. Analyze your insurance reports securely from your computer. Free during beta.",
+  description: "Download the RaporinAI desktop application. Analyze your insurance reports securely from your computer.",
   alternates: {
     canonical: "https://raporin.com/en/download",
   },

@@ -14,7 +14,7 @@ export default function PricingSectionEN() {
           transition={{ duration: 0.6 }}
           className="text-4xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#17C6A3] to-[#0F918B]"
         >
-          Beta Version
+          Plans &amp; Pricing
         </motion.h2>
         
         <motion.div
@@ -32,11 +32,11 @@ export default function PricingSectionEN() {
             </div>
             
             <p className="text-xl text-gray-800 leading-relaxed mb-6 font-medium">
-              During the beta period, <strong className="text-[#0F918B]">all RaporinAI features</strong> are completely <strong className="text-[#0F918B]">free</strong> to use.
+              Choose a <strong className="text-[#0F918B]">monthly or yearly plan</strong> that fits your pharmacy&apos;s prescription volume.
             </p>
             
             <p className="text-lg text-gray-700 leading-relaxed">
-              Support us with your ideas and feedback — let&apos;s build a better product together.
+              Creating an account is free and no credit card is required. You can cancel your plan anytime.
             </p>
             
             <motion.a
