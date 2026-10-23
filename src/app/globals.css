@@ -63,3 +63,18 @@ html {
     background-position: 200% center;
   }
 }
+/* Hourglass flip for beta countdown badge */
+@keyframes hourglass-flip {
+  0%, 80% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-hourglass {
+    animation: hourglass-flip 2s ease-in-out infinite;
+  }
+}

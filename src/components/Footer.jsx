@@ -4,7 +4,8 @@ import Image from "next/image";
 import CookieSettingsLink from "./CookieSettingsLink";
 import { solutionPages, solutionSlugs } from "../lib/solutionPages";
 import { LEGAL_DOCUMENTS } from "./legal/documents";
-import { FaTwitter, FaLinkedin, FaInstagram, FaEnvelope, FaBuilding, FaMapMarkerAlt } from "react-icons/fa";
+import { FaTwitter, FaLinkedin, FaInstagram, FaEnvelope, FaBuilding, FaMapMarkerAlt, FaWhatsapp } from "react-icons/fa";
+import { WHATSAPP_NUMBER, WHATSAPP_DISPLAY } from "../lib/contact";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -75,6 +76,17 @@ export default function Footer() {
                 </a>
               </li>
               <li className="flex items-start gap-3 text-sm text-gray-600">
+                <FaWhatsapp className="text-teal-600 mt-1 flex-shrink-0" />
+                <a
+                  href={`https://wa.me/${WHATSAPP_NUMBER}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-teal-600 transition-colors"
+                >
+                  {WHATSAPP_DISPLAY}
+                </a>
+              </li>
+              <li className="flex items-start gap-3 text-sm text-gray-600">
                 <FaBuilding className="text-teal-600 mt-1 flex-shrink-0" />
                 <span>KairoLabs Sağlık Teknolojileri Anonim Şirketi</span>
               </li>
@@ -132,6 +144,18 @@ export default function Footer() {
               </li>
             ))}
           </ul>
+        </div>
+
+        {/* iyzico ödeme logoları — iyzico üye işyeri başvurusu için zorunlu */}
+        <div className="border-t border-gray-200 pt-8 mt-8 flex justify-center">
+          <Image
+            src="/payment/iyzico-logo-band.svg"
+            alt="iyzico ile Öde, Mastercard, Visa, American Express, Troy"
+            width={429}
+            height={32}
+            unoptimized
+            className="h-6 w-auto sm:h-8"
+          />
         </div>
 
         {/* Alt Bölüm */}

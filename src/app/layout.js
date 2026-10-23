@@ -3,6 +3,7 @@ import "./globals.css";
 import StructuredData from "../components/StructuredData";
 import LayoutWrapper from "../components/LayoutWrapper";
 import CookieConsent from "../components/CookieConsent";
+import WhatsAppButton from "../components/WhatsAppButton";
 import { GTM_ID } from "../lib/analytics";
 import { CONSENT_STORAGE_KEY, CONSENT_VERSION } from "../lib/cookieConsent";
 
@@ -82,11 +83,6 @@ export const metadata = {
   },
   alternates: {
     canonical: 'https://raporin.com',
-    languages: {
-      'tr-TR': 'https://raporin.com',
-      'en': 'https://raporin.com/en',
-      'x-default': 'https://raporin.com',
-    },
   },
   // Doğrulama kodları ortam değişkeninden gelir; tanımlı değilse etiket hiç basılmaz.
   // Şablon değerli bir meta etiketi doğrulamayı bozar (bkz. .env.example).
@@ -173,6 +169,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <div>
           {children}
         </div>
+
+        {/* Sağ altta sabit WhatsApp destek butonu (TR ve EN tüm sayfalarda) */}
+        <WhatsAppButton />
 
         {/* Çerez bandı + çerez yönetim paneli (TR ve EN tüm sayfalarda) */}
         <CookieConsent />

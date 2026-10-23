@@ -26,10 +26,13 @@ const features = [
   },
 ];
 
-/** Kayıt, giriş ve şifre sayfalarının ortak iskeleti: tek kart içinde solda marka paneli, sağda form. */
-export default function AuthShell({ title, subtitle, children, footer }) {
+/**
+ * Kayıt, giriş ve şifre sayfalarının ortak iskeleti: tek kart içinde solda marka paneli, sağda form.
+ * betaBanner: Navbar'da beta bandı (h-8) gösterilen sayfalarda üst boşluğu o kadar artırır.
+ */
+export default function AuthShell({ title, subtitle, children, footer, betaBanner = false }) {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-[#f2fbf8] via-white to-[#f4fbfd] px-4 pb-16 pt-28 sm:pt-32">
+    <main className={`min-h-screen bg-gradient-to-br from-[#f2fbf8] via-white to-[#f4fbfd] px-4 pb-16 ${betaBanner ? "pt-36 sm:pt-40" : "pt-28 sm:pt-32"}`}>
       <div className="mx-auto grid w-full max-w-6xl overflow-hidden rounded-[20px] border border-[#e6edf1] bg-white shadow-[0_10px_34px_rgba(15,23,42,0.10)] lg:grid-cols-[420px_1fr]">
         <aside className="hidden flex-col border-r border-teal-600/10 bg-gradient-to-br from-[#ecfdf6] via-[#d8f4ef] to-[#e9f7fb] px-11 pt-10 lg:flex">
           <span className="self-start rounded-full bg-white/85 px-3 py-1 text-xs font-bold tracking-wide text-teal-700 shadow-[0_2px_8px_rgba(13,148,136,0.14)]">

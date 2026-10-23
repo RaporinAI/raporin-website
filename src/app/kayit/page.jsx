@@ -213,7 +213,7 @@ export default function SignupPage() {
 
   if (registeredEmail) {
     return (
-      <AuthShell title="E-postanızı doğrulayın" footer={<>Doğruladıktan sonra e-posta adresiniz ve şifrenizle <AuthLink href="/giris">giriş yapın</AuthLink>, ardından uygulamayı indirin.</>}>
+      <AuthShell betaBanner title="E-postanızı doğrulayın" footer={<>Doğruladıktan sonra e-posta adresiniz ve şifrenizle <AuthLink href="/giris">giriş yapın</AuthLink>, ardından uygulamayı indirin.</>}>
         <div className="flex flex-col items-center text-center">
           <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-50 text-teal-600">
             <MailCheck size={32} aria-hidden="true" />
@@ -237,6 +237,7 @@ export default function SignupPage() {
 
   return (
     <AuthShell
+      betaBanner
       title="Ücretsiz hesap oluşturun"
       subtitle="Kredi kartı gerekmez. Kayıt sonrası masaüstü uygulamasını indirebilirsiniz."
       footer={<>Zaten hesabınız var mı? <AuthLink href="/giris">Giriş yapın</AuthLink></>}
