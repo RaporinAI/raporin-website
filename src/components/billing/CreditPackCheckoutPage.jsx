@@ -23,7 +23,6 @@ const unitFormat = new Intl.NumberFormat("tr-TR", { minimumFractionDigits: 2, ma
 /** Sol sütun: miktar seçimi ve tutar. Ödeme adımına geçince miktar kilitlenir. */
 function CreditPackSummary({ offer, quantity, onQuantity, locked, available }) {
   const quote = offer.options.find((o) => o.quantity === quantity);
-  const cheapest = offer.options.reduce((min, o) => Math.min(min, o.unitNetPrice), Infinity);
 
   return (
     <div className="space-y-8">
@@ -44,7 +43,6 @@ function CreditPackSummary({ offer, quantity, onQuantity, locked, available }) {
         <div className="mt-4 grid grid-cols-5 gap-2">
           {offer.options.map((o) => {
             const selected = o.quantity === quantity;
-            const discounted = o.unitNetPrice < offer.options[0].unitNetPrice;
             return (
               <button
                 key={o.quantity}
@@ -59,11 +57,6 @@ function CreditPackSummary({ offer, quantity, onQuantity, locked, available }) {
               >
                 <span className="block text-sm font-bold">{formatTL(o.quantity)}</span>
                 <span className="block text-[11px] text-slate-500">{unitFormat.format(o.unitNetPrice)} ₺</span>
-                {discounted && o.unitNetPrice === cheapest && (
-                  <span className="absolute -top-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[#FFD84D] px-1.5 text-[10px] font-bold text-[#5A3E00]">
-                    En uygun
-                  </span>
-                )}
               </button>
             );
           })}
