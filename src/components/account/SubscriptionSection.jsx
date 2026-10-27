@@ -295,7 +295,7 @@ export default function SubscriptionSection({ view, onNavigate, profile, pharmac
   let packagesNote = "Satın alma yakında açılacak.";
   if (purchaseOpen) {
     packagesNote = !hasPaidSubscription
-      ? "Fiyatlar KDV hariçtir. Abonelik otomatik yenilenir, istediğiniz zaman iptal edebilirsiniz."
+      ? "Fiyatlar KDV hariçtir. Abonelik otomatik yenilenir."
       : upgradeOptions.size > 0
         ? "Üst bir pakete hemen geçebilirsiniz. Mevcut paketinizi zaten ödediğiniz için yalnızca aradaki farkı ödersiniz; her paketin altında bugün ödeyeceğiniz tutar yazıyor."
         : upgradeBlockReason ??

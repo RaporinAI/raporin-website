@@ -52,7 +52,6 @@ function OrderSummary({ selection, welcome, betaEndsAt }) {
     credits ? `Her ay ${formatTL(credits)} analiz kredisi` : "Sınırsız analiz",
     ...plan.features,
     "Ekibinizle ortak kullanım",
-    "İstediğiniz zaman iptal",
   ];
 
   return (
