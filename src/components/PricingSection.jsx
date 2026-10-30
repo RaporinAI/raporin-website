@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Gift } from "lucide-react";
-import PlanCards, { BillingToggle, LaunchPricingNote, yearlyToggleProps } from "./pricing/PlanCards";
+import { ArrowRight, Coins, Gift } from "lucide-react";
+import PlanCards, { BillingToggle, yearlyToggleProps } from "./pricing/PlanCards";
 import { BetaOfferStrip } from "./billing/BetaOffer";
 import { formatTL, loadCatalogShared, STATIC_CATALOG } from "../lib/billing/catalog";
 import { savePendingPurchase } from "../lib/billing/pendingPurchase";
@@ -40,8 +40,10 @@ export default function PricingSection() {
           <h2 className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#17C6A3] to-[#0F918B]">
             Fiyatlandırma
           </h2>
-          <LaunchPricingNote plans={catalog.plans} betaEndsAt={catalog.betaOfferEndsAt} className="mt-2" />
           <p className="mt-3 text-gray-600">Eczanenizin reçete yoğunluğuna uygun paketi seçin.</p>
+          <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-teal-50 px-3 py-1 text-sm text-teal-800 ring-1 ring-teal-100">
+            <Coins size={15} aria-hidden="true" /> <strong className="font-semibold">1 kredi = 1 ilaç analizi</strong>
+          </p>
         </div>
 
         {catalog.welcomeCredits > 0 && (

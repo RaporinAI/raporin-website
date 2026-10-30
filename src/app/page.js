@@ -8,6 +8,7 @@ import PricingSection from "../components/PricingSection.jsx";
 import ContactSection from "../components/ContactSection.jsx";
 import FaqSchema from "../components/FaqSchema.jsx";
 import ProductSchema from "../components/ProductSchema";
+import LaunchBanner from "../components/LaunchBanner.jsx";
 
 export default function HomePage() {
   return (
@@ -15,6 +16,7 @@ export default function HomePage() {
       <FaqSchema />
       <ProductSchema />
       <div className="pt-28">
+        <LaunchBanner />
         <HeroSection />
         <FeaturesSection />
         <HowItWorks />
