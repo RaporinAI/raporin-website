@@ -41,9 +41,6 @@ export default function PricingSection() {
             Fiyatlandırma
           </h2>
           <p className="mt-3 text-gray-600">Eczanenizin reçete yoğunluğuna uygun paketi seçin.</p>
-          <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-teal-50 px-3 py-1 text-sm text-teal-800 ring-1 ring-teal-100">
-            <Coins size={15} aria-hidden="true" /> <strong className="font-semibold">1 kredi = 1 ilaç analizi</strong>
-          </p>
         </div>
 
         {catalog.welcomeCredits > 0 && (
@@ -61,6 +58,9 @@ export default function PricingSection() {
         <div className="mt-10">
           <BillingToggle yearly={yearly} onChange={setYearly} {...yearlyToggleProps(catalog.plans)} />
         </div>
+        <p className="mt-4 flex items-center justify-center gap-1.5 text-[15px] font-semibold text-teal-700">
+          <Coins size={16} aria-hidden="true" /> 1 kredi = 1 ilaç analizi
+        </p>
 
         {/* Yalnızca giriş yapmış beta üyesine, indirim süresince (katalog eczaneye göre gelir) */}
         <BetaOfferStrip endsAt={catalog.betaOfferEndsAt} className="mx-auto mt-8 max-w-3xl" />
@@ -70,11 +70,11 @@ export default function PricingSection() {
           yearly={yearly}
           action={action}
           betaEndsAt={catalog.betaOfferEndsAt}
-          className="mt-12 md:grid-cols-3"
+          className="mt-10 md:grid-cols-3"
         />
 
         {catalog.creditPack && (
-          <p className="mx-auto mt-6 max-w-2xl text-center text-sm text-gray-600">
+          <p className="mx-auto mt-2 max-w-2xl text-center text-sm text-gray-600">
             Aylık krediniz yetmezse paketinizi istediğiniz an yükseltebilir ya da{" "}
             <strong className="font-semibold text-gray-800">ek kredi</strong> alabilirsiniz.
           </p>
