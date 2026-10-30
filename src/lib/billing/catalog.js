@@ -2,6 +2,7 @@
 // kendi /api/pricing route'undan okur (backend'e sunucu tarafında gider). Katalog boşsa veya
 // alınamazsa sitedeki statik paketler gösterilir; satın alma o durumda kapalıdır.
 import { PRICING_PLANS } from "../pricingPlans";
+import { hasSessionFlag } from "../auth/sessionFlag";
 
 export const PERIODS = { MONTHLY: "MONTHLY", YEARLY: "YEARLY" };
 
@@ -121,14 +122,18 @@ export async function loadCatalog() {
 
 // Aynı sayfadaki bileşenler (üst bölüm, fiyatlandırma, rozetler) kataloğu bir kez ister; bir dakikadan eski
 // sonuç yeniden alınır, böylece admin panelde yapılan değişiklik sayfa yenilenmeden de kısa sürede görünür.
-// Giriş/çıkış sayfa değiştirerek yapıldığı için paylaşılan sonuç başka bir oturumun kataloğu olamaz.
+// Giriş/çıkış sayfa yenilenmeden de olur (giriş sayfası yönlendirerek döner); oturum durumu değişince paylaşılan
+// sonuç atılır, yoksa yeni giriş yapan beta üyesi oturumsuz kataloğu (lansman fiyatlarını) görürdü.
 let shared = null;
 let sharedAt = 0;
+let sharedSession = null;
 
-/** {@link loadCatalog} ile aynı, ama aynı anda ve bir dakika içinde gelen istekler tek isteği paylaşır. */
+/** {@link loadCatalog} ile aynı, ama aynı oturumda aynı anda ve bir dakika içinde gelen istekler tek isteği paylaşır. */
 export function loadCatalogShared() {
-  if (!shared || Date.now() - sharedAt > 60_000) {
+  const session = hasSessionFlag();
+  if (!shared || session !== sharedSession || Date.now() - sharedAt > 60_000) {
     sharedAt = Date.now();
+    sharedSession = session;
     shared = loadCatalog();
   }
   return shared;
