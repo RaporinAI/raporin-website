@@ -147,6 +147,29 @@ export function BetaOfferStrip({ endsAt, clockOffset = 0, className = "" }) {
   );
 }
 
+/** Ana sayfada menünün altındaki uçtan uca bant: beta üyesine lansman bandı yerine kendi indirimi gösterilir. */
+export function BetaOfferBanner({ endsAt, className = "", children }) {
+  const { msLeft, phase } = useOfferCountdown(endsAt);
+  if (!endsAt || phase === "ended") return null;
+  const style = PHASE_STYLE[phase];
+  const { hours, minutes, seconds } = splitDuration(msLeft);
+  return (
+    <div className={`border-y ${style.strip} ${className}`}>
+      <div className="mx-auto flex max-w-[1536px] flex-wrap items-center justify-center gap-x-5 gap-y-1.5 px-4 py-2.5 text-center text-sm sm:px-6 lg:px-10">
+        <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-extrabold tracking-[.12em] uppercase ${style.chip}`}>
+          <Sparkles size={13} aria-hidden="true" /> Beta üyelerine özel
+        </span>
+        <span className="font-semibold">Size özel %50 indirim {formatOfferEnd(endsAt)}&apos;a kadar</span>
+        <span className={`inline-flex items-center gap-1.5 font-bold tabular-nums ${style.accent}`}>
+          <Clock size={15} aria-hidden="true" />
+          {phase === "urgent" ? `Son ${pad(hours)}:${pad(minutes)}:${pad(seconds)}` : `${remainingLabel(msLeft)} kaldı`}
+        </span>
+        {children}
+      </div>
+    </div>
+  );
+}
+
 /** Beta fiyatlı paket kartındaki kısa kalan süre satırı. */
 export function BetaOfferDeadline({ endsAt }) {
   const { msLeft, phase } = useOfferCountdown(endsAt);

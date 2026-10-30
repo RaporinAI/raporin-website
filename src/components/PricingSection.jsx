@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Coins, Gift } from "lucide-react";
 import PlanCards, { BillingToggle, yearlyToggleProps } from "./pricing/PlanCards";
-import { BetaOfferStrip } from "./billing/BetaOffer";
 import { formatTL, loadCatalogShared, STATIC_CATALOG } from "../lib/billing/catalog";
 import { savePendingPurchase } from "../lib/billing/pendingPurchase";
 import { hasSessionFlag } from "../lib/auth/sessionFlag";
@@ -41,29 +40,27 @@ export default function PricingSection() {
             Fiyatlandırma
           </h2>
           <p className="mt-3 text-gray-600">Eczanenizin reçete yoğunluğuna uygun paketi seçin.</p>
+          {/* Kredi ve hoş geldin hediyesi tek, sakin bir bilgi satırında; vurgu paketlerde kalır. */}
+          <ul className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm text-gray-600">
+            <li className="flex items-center gap-1.5">
+              <Coins size={15} className="text-teal-600" aria-hidden="true" />
+              <strong className="font-semibold text-slate-800">1 kredi = 1 ilaç analizi</strong>
+            </li>
+            {catalog.welcomeCredits > 0 && (
+              <>
+                <li aria-hidden="true" className="text-gray-300">•</li>
+                <li className="flex items-center gap-1.5">
+                  <Gift size={15} className="text-teal-600" aria-hidden="true" />
+                  Kayıtta <strong className="font-semibold text-slate-800">{formatTL(catalog.welcomeCredits)} kredi hediye</strong>
+                </li>
+              </>
+            )}
+          </ul>
         </div>
-
-        {catalog.welcomeCredits > 0 && (
-          <div className="mx-auto mt-8 flex max-w-3xl items-center gap-4 rounded-2xl border border-teal-100 bg-white/80 px-5 py-4 shadow-sm">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
-              <Gift size={22} aria-hidden="true" />
-            </span>
-            <p className="text-sm text-gray-600">
-              <strong className="text-base text-slate-900">Kaydolun, {formatTL(catalog.welcomeCredits)} kredi hediye!</strong>{" "}
-              Kart bilgisi gerekmez; RaporinAI&apos;yi hemen kendi reçetelerinizle deneyin.
-            </p>
-          </div>
-        )}
 
         <div className="mt-10">
           <BillingToggle yearly={yearly} onChange={setYearly} {...yearlyToggleProps(catalog.plans)} />
         </div>
-        <p className="mt-4 flex items-center justify-center gap-1.5 text-[15px] font-semibold text-teal-700">
-          <Coins size={16} aria-hidden="true" /> 1 kredi = 1 ilaç analizi
-        </p>
-
-        {/* Yalnızca giriş yapmış beta üyesine, indirim süresince (katalog eczaneye göre gelir) */}
-        <BetaOfferStrip endsAt={catalog.betaOfferEndsAt} className="mx-auto mt-8 max-w-3xl" />
 
         <PlanCards
           plans={catalog.plans}
