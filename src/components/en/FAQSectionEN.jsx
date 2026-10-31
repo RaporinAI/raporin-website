@@ -70,8 +70,8 @@ export default function FAQSectionEN() {
       category: "Pricing & Plans",
       questions: [
         {
-          q: "Is there a free trial?",
-          a: "Yes! RaporinAI is currently in Beta and all features are completely free — no credit card required."
+          q: "How does pricing work?",
+          a: "RaporinAI is offered as monthly or yearly plans sized to your pharmacy's prescription volume. Creating an account is free and no credit card is required; you can buy or cancel your plan anytime from your account."
         }
       ]
     }

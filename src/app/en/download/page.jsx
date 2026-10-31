@@ -2,8 +2,7 @@
 
 import Image from "next/image";
 import { trackDownload } from "../../../lib/analytics";
-
-const DOWNLOAD_URL = "https://downloads.raporin.com/RaporinAI-1.1.28.msi";
+import { DOWNLOAD_URL } from "../../../lib/download";
 
 export default function DownloadPageEN() {
   return (
@@ -29,7 +28,7 @@ export default function DownloadPageEN() {
             Download the App
           </h1>
           <span className="inline-block bg-gradient-to-r from-orange-400 to-amber-400 text-white text-sm font-extrabold px-4 py-1.5 rounded-full shadow-md transform hover:scale-105 transition-transform cursor-default tracking-widest border border-white/50">
-            ✨ COMPLETELY FREE NOW
+            ✨ FREE ACCOUNT · NO CREDIT CARD
           </span>
         </div>
 

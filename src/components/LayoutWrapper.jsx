@@ -4,6 +4,8 @@ import Navbar from "./Navbar";
 import Image from "next/image";
 import Link from "next/link";
 
+const CHECKOUT_PATHS = ["/hesabim/satin-al", "/hesabim/yukselt", "/hesabim/ek-kredi"];
+
 // Form sayfalarında sabit maskot içeriğin üstüne biner.
 const HIDE_MASCOT_PATHS = ["/", "/kayit", "/giris", "/giris/masaustu", "/sifremi-unuttum", "/hesabim"];
 
@@ -11,7 +13,8 @@ export default function LayoutWrapper() {
   const pathname = usePathname();
   const isEnglish = pathname.startsWith("/en");
 
-  if (isEnglish) return null;
+  // Ödeme sayfaları (paket, yükseltme, ek kredi) dikkat dağıtmayan kendi başlığını kullanır (SaaS checkout düzeni).
+  if (isEnglish || CHECKOUT_PATHS.some((path) => pathname.startsWith(path))) return null;
 
   return (
     <>

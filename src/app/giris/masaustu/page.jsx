@@ -9,12 +9,16 @@ import { trackLogin } from "../../../lib/analytics";
 // Masaüstü uygulamasındaki "Web'de düzenle" butonları buraya gelir:
 //   /giris/masaustu?bolum=eczane#code=<tek kullanımlık kod>
 // Kod # kısmında taşınır: tarayıcı bunu sunucuya, loglara ve Referer başlığına göndermez.
-const SECTIONS = ["genel", "kisisel", "guvenlik", "eczane", "ekip"];
+const SECTIONS = ["genel", "paket", "kredi", "paketler", "kisisel", "guvenlik", "eczane", "ekip"];
+// Hesabım dışında açılan sayfalar (masaüstündeki "Paketi yükselt" ve "Ek kredi al" düğmeleri) ve beta indirimi
+// bandındaki "İndirimli paketimi seç" (Hesabım indirimli pakete kaydırır)
+const PAGES = { yukselt: "/hesabim/yukselt", "ek-kredi": "/hesabim/ek-kredi", "beta-indirimi": "/hesabim#beta-indirimi" };
 
 function readHandoff() {
   const code = new URLSearchParams(window.location.hash.slice(1)).get("code");
   const section = new URLSearchParams(window.location.search).get("bolum");
-  return { code, target: `/hesabim#${SECTIONS.includes(section) ? section : "genel"}` };
+  const target = PAGES[section] ?? `/hesabim#${SECTIONS.includes(section) ? section : "genel"}`;
+  return { code, target };
 }
 
 /** Kodu oturuma çevirir; sonuç { ok: true } ya da { ok: false, message }. */

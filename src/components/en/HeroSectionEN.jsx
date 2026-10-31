@@ -155,7 +155,7 @@ export default function HeroSectionEN() {
               <span className="text-2xl animate-bounce">🎉</span>
               <div className="flex flex-col items-start">
                 <span className="text-white font-bold text-xs uppercase tracking-wider leading-none">
-                  BETA - FREE
+                  FREE ACCOUNT
                 </span>
                 <span className="text-white font-semibold text-sm sm:text-base mt-0.5">
                   Try It Now

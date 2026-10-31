@@ -1,3 +1,5 @@
+import { DOWNLOAD_URL } from "../lib/download";
+
 export default function DownloadSection() {
   return (
     <section className="text-center py-20">
@@ -5,7 +7,7 @@ export default function DownloadSection() {
       <p className="text-gray-600 mb-8">Platformunu seç ve hemen indir.</p>
       <div className="flex justify-center gap-6 flex-wrap">
         <a
-          href="https://downloads.raporin.com/RaporinAI-1.1.28.msi"
+          href={DOWNLOAD_URL}
           className="bg-teal-600 text-white px-6 py-3 rounded-xl hover:bg-teal-700 transition"
         >
           Uygulamayı İndir          </a>

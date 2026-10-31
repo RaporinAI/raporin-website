@@ -18,6 +18,8 @@ export default function Screenshot({
   height,
   className = "",
   placeholderLabel,
+  // fill modunda tarayıcının gereğinden büyük (100vw) görsel istememesi için
+  sizes = "(min-width: 1024px) 50vw, 100vw",
 }) {
   const [failed, setFailed] = useState(false);
 
@@ -45,6 +47,7 @@ export default function Screenshot({
       fill={fill || undefined}
       width={fill ? undefined : width}
       height={fill ? undefined : height}
+      sizes={sizes}
       className={className}
       onError={() => setFailed(true)}
     />

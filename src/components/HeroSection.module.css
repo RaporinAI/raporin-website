@@ -147,25 +147,32 @@
   .signature { margin-top: 16px; }
 }
 
-.socialProof { display: flex; align-items: center; gap: 18px; max-width: 560px; margin-top: 30px; padding: 22px 24px; border: 1px solid #d5eee6; border-radius: 20px; background: linear-gradient(110deg, #edf9f4, #f8fdfa 75%, #ffffff80); }
-.pharmacyIcons { display: flex; flex-shrink: 0; padding-right: 3px; }
-.pharmacyIcons span { display: grid; place-items: center; width: 44px; height: 44px; border: 3px solid #f5fcf8; border-radius: 50%; color: #168777; background: #daf0e5; }
-.pharmacyIcons span + span { margin-left: -16px; }
+/* Teklif bloğu: hoş geldin hediyesi + kayıt düğmesi, sol kolonun tek odağı */
+.offer { display: flex; align-items: center; gap: 16px; max-width: 580px; margin-top: 30px; padding: 12px 12px 12px 18px; border: 1px solid #bdece0; border-radius: 22px; background: linear-gradient(110deg, #ecfbf6, #ffffffd9 70%); box-shadow: 0 12px 30px #009a871a; }
+.offerIcon { display: grid; place-items: center; flex-shrink: 0; width: 48px; height: 48px; border-radius: 16px; color: white; background: linear-gradient(135deg, #008c87, #00a58e); box-shadow: 0 6px 14px #00877a33; }
+.offerText { min-width: 0; }
+.offerLabel { font-size: 11px; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; color: #087f77; }
+.offerAmount { margin-top: 2px; font-size: 26px; line-height: 1.15; font-weight: 800; letter-spacing: -.03em; color: #10232d; }
+.offerAmount span { color: #008c87; }
+.offerNote { margin-top: 2px; font-size: 12px; color: #5b777b; }
+.offerButton { margin-left: auto; flex-shrink: 0; }
+/* İkincil satır: video bağlantısı ve sosyal kanıt, çerçevesiz ve sakin */
+.meta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 18px; margin-top: 22px; }
+.watch { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 650; color: #087e80; }
+.watch:hover { color: #05605f; text-decoration: underline; text-underline-offset: 4px; }
+.metaDivider { width: 1px; height: 34px; background: #cfe9e2; }
+.proof { display: flex; align-items: center; gap: 12px; }
+.proof p { font-size: 15px; font-weight: 600; line-height: 1.2; color: #315b5d; }
+.proof strong { font-size: 26px; font-weight: 800; letter-spacing: -.04em; color: #087e74; }
+.proof p span { display: block; margin-top: 2px; font-size: 12px; font-weight: 500; color: #5b777b; }
+.pharmacyIcons { display: flex; flex-shrink: 0; }
+.pharmacyIcons span { display: grid; place-items: center; width: 38px; height: 38px; border: 3px solid #f5fcf8; border-radius: 50%; color: #168777; background: #daf0e5; }
+.pharmacyIcons span + span { margin-left: -13px; }
 .pharmacyIcons span:nth-child(2) { color: #137e80; background: #ccebe4; }
 .pharmacyIcons span:nth-child(3) { color: #f2fffb; background: #389f90; }
-.proofText { min-width: 0; }
-.proofText p:first-child { display: flex; align-items: baseline; gap: 7px; color: #315b5d; }
-.proofText strong { font-size: 32px; line-height: 1.1; letter-spacing: -.045em; font-weight: 750; color: #087e74; }
-.proofText p:first-child span { font-size: 17px; font-weight: 600; }
-.proofText p + p { margin-top: 7px; font-size: 12px; line-height: 1.6; color: #5b777b; }
-.proofBadge { flex-shrink: 0; margin-left: auto; color: #349786; }
-@media (max-width: 1199px) { .socialProof { gap: 13px; padding: 20px 18px; } .proofBadge { display: none; } }
 @media (max-width: 639px) {
-  .socialProof { margin-top: 24px; padding: 18px 15px; gap: 13px; }
-  .pharmacyIcons span { width: 36px; height: 36px; border-width: 2px; }
-  .pharmacyIcons span + span { margin-left: -15px; }
-  .pharmacyIcons svg { width: 19px; height: 19px; }
-  .proofText strong { font-size: 28px; }
-  .proofText p:first-child span { font-size: 15px; }
-  .proofText p + p { font-size: 11px; }
+  .offer { flex-wrap: wrap; gap: 12px 14px; padding: 16px; }
+  .offerAmount { font-size: 23px; }
+  .offerButton { width: 100%; margin-left: 0; }
+  .metaDivider { display: none; }
 }

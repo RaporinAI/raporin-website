@@ -1,10 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import { ChevronRight, KeyRound, Loader2, Trash2, UserPlus, Users, X } from "lucide-react";
+import { ChevronRight, Download, KeyRound, Loader2, Monitor, Trash2, UserPlus, Users, Wallet, X } from "lucide-react";
 import AccountCard from "./AccountCard";
 import { Alert, Field, PasswordInput, SelectInput, SubmitButton, TextInput } from "../auth/FormControls";
 import { accountRequest } from "../../lib/auth/accountApi";
 import { normalizePhone, validateEmail, validateMobilePhone } from "../../lib/auth/validation";
+import { DOWNLOAD_URL } from "../../lib/download";
+import { trackDownload } from "../../lib/analytics";
 
 // Backend PharmacyTitle ile aynı. Baş Eczacı yönetici yetkisi alır (ekip ve eczane bilgilerini yönetir).
 const TITLES = [
@@ -51,6 +53,63 @@ function initials(name) {
 }
 
 const emptyMember = { displayName: "", email: "", phone: "", title: "ECZACI", password: "" };
+
+/**
+ * Ekip kartının başındaki kısa açıklama: üye eklemek ücretsiz, uygulama eczanedeki her bilgisayara kurulabilir,
+ * herkes kendi hesabıyla girer ve eczanenin kredisini ortak kullanır. Eczacının okuyacağı dilde, teknik değil.
+ */
+function TeamIntro({ canManage }) {
+  const items = [
+    {
+      icon: Users,
+      title: "Ekip üyesi eklemek ücretsiz",
+      text: `Eczanenize ${MAX_MEMBERS} kişiye kadar üye ekleyebilirsiniz; her üye için ayrıca ödeme yapmazsınız.`,
+    },
+    {
+      icon: Monitor,
+      title: "Her bilgisayarda kullanın",
+      text: "Uygulamayı eczanedeki istediğiniz kadar bilgisayara kurun. Her çalışan kendi bilgisayarında, kendi e-postası ve şifresiyle giriş yapar.",
+    },
+    {
+      icon: Wallet,
+      title: "Kredi ortak",
+      text: "Tüm ekip eczanenizin paketini ve kredisini birlikte kullanır; çalışanlarınız için ayrı paket almanız gerekmez.",
+    },
+  ];
+  return (
+    <div className="rounded-2xl border border-teal-100 bg-gradient-to-br from-teal-50/70 to-white p-4 sm:p-5">
+      <ul className="grid gap-4 sm:grid-cols-3">
+        {items.map(({ icon: Icon, title, text }) => (
+          <li key={title} className="flex gap-3">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-teal-600 shadow-sm">
+              <Icon size={17} aria-hidden="true" />
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-slate-900">{title}</p>
+              <p className="mt-0.5 text-xs leading-relaxed text-slate-600">{text}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+      {canManage && (
+        <p className="mt-4 flex flex-col gap-2 border-t border-teal-100 pt-3 text-xs text-slate-600 sm:flex-row sm:items-center sm:justify-between">
+          <span>
+            <span className="font-semibold text-slate-800">Nasıl eklerim?</span> &quot;Üye ekle&quot;ye basın, çalışanınızın
+            bilgilerini ve bir şifre girin, şifreyi kendisine iletin. Çalışanınız uygulamayı kendi bilgisayarına kurup bu
+            bilgilerle giriş yapar. &quot;Baş Eczacı&quot; ünvanı verdiğiniz kişi ekibi ve paketi de yönetebilir.
+          </span>
+          <a
+            href={DOWNLOAD_URL}
+            onClick={() => trackDownload(DOWNLOAD_URL)}
+            className="inline-flex shrink-0 items-center gap-1.5 font-semibold text-teal-700 hover:underline"
+          >
+            <Download size={14} aria-hidden="true" /> Uygulamayı indir
+          </a>
+        </p>
+      )}
+    </div>
+  );
+}
 
 function AddMemberForm({ onCancel, onCreated }) {
   const [form, setForm] = useState(emptyMember);
@@ -396,6 +455,7 @@ export default function TeamSection({ profile, canManage }) {
       subtitle={members ? `Eczanenizde RaporinAI kullanan kişiler · ${count}/${MAX_MEMBERS} üye` : "Eczanenizde RaporinAI kullanan kişiler"}
     >
       <div className="space-y-5">
+        <TeamIntro canManage={canManage} />
         {notice && <Alert tone="success">{notice}</Alert>}
 
         {canManage && !adding && (
