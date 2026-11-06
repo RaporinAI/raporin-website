@@ -44,3 +44,9 @@ next-env.d.ts
 # md
 *.md
 !GEO-GUIDE.md
+!CLAUDE.md
+!.claude/skills/**/*.md
+
+# Claude Code: kişisel ayarlar ve oturum dosyaları paylaşılmaz
+.claude/settings.local.json
+.claude/RESUME.md
