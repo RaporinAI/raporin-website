@@ -76,9 +76,9 @@ const CURRENCY = "TRY";
 const PENDING_ITEMS_KEY = "raporin_checkout_items";
 const REPORTED_PURCHASES_KEY = "raporin_reported_purchases";
 
-function pushEcommerce(event, ecommerce) {
+function pushEcommerce(event, ecommerce, extra) {
   pushEvent({ ecommerce: null });
-  pushEvent({ event, ecommerce });
+  pushEvent({ event, ecommerce, ...extra });
 }
 
 function readList(key, fallback) {
@@ -133,7 +133,7 @@ export function trackAddPaymentInfo(item, amount, checkoutId) {
  * Backend ödemeyi COMPLETED olarak doğruladıktan sonra çağrılır (kart güncelleme hariç). Aynı işlem
  * (checkoutId) bu tarayıcıda ikinci kez raporlanmaz; GA4 ayrıca transaction_id ile de tekilleştirir.
  *
- * @param {{ checkoutId: number, kind: string, description?: string, amount: number, credits?: number }} checkout
+ * @param {{ checkoutId: number, kind: string, description?: string, amount: number, credits?: number, testPharmacy?: boolean }} checkout
  */
 export function trackPurchase(checkout) {
   if (typeof window === "undefined" || checkout.amount == null) return;
@@ -148,11 +148,20 @@ export function trackPurchase(checkout) {
     name: checkout.description || checkout.kind,
     category: checkout.kind,
   };
-  pushEcommerce("purchase", {
-    transaction_id: transactionId,
-    ...ecommerceOf(item, checkout.amount),
-    ...(checkout.credits ? { credits: checkout.credits } : {}),
-  });
+  // Admin panelden açılan test eczanesinin satın alması da raporlanır (dönüşüm ölçümünü denemek için);
+  // GTM/GA4'te ayrılabilsin diye test_account eklenir.
+  const testAccount = checkout.testPharmacy === true;
+  pushEcommerce(
+    "purchase",
+    {
+      transaction_id: transactionId,
+      ...ecommerceOf(item, checkout.amount),
+      ...(checkout.credits ? { credits: checkout.credits } : {}),
+    },
+    testAccount ? { test_account: true } : undefined,
+  );
+  // GTM veri katmanı değerleri sonraki olaylara taşır; işaret yalnızca bu olaya ait kalsın.
+  if (testAccount) pushEvent({ test_account: undefined });
 
   delete pending[transactionId];
   writeList(PENDING_ITEMS_KEY, pending);
