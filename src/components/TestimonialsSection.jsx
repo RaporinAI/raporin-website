@@ -40,7 +40,7 @@ export default function TestimonialsSection() {
   const stats = [
     { number: "1000+", label: "Aktif Eczane" },
     { number: "%98", label: "Doğruluk Oranı" },
-    { number: "100K+", label: "Kontrol Edilen Rapor" },
+    { number: "250K+", label: "Kontrol Edilen Reçete" },
     { number: "4.9/5", label: "Kullanıcı Memnuniyeti" }
   ];
 
