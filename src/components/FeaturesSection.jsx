@@ -10,6 +10,7 @@ import {
   FaPills,
 } from "react-icons/fa";
 import { RiSparkling2Fill } from "react-icons/ri";
+import { Radar } from "lucide-react";
 
 export default function FeaturesSection() {
   const features = [
@@ -18,6 +19,13 @@ export default function FeaturesSection() {
       title: "Güncel SUT ile Akıllı Analiz",
       desc: "Modelimiz güncel SUT dokümanlarıyla eğitilmiştir. Tebliğ güncellemeleri sisteme düzenli olarak yansıtılır; raporlarınız her zaman geçerli kurallara göre değerlendirilir.",
       layout: "featured",
+    },
+    {
+      Icon: Radar,
+      title: "Canlı Takip",
+      desc: "Eczane programınızdan ya da Medula'dan kaydettiğiniz reçete arka planda kontrol edilir; sorun varsa ekranın kenarında uyarı açılır.",
+      layout: "normal",
+      live: true,
     },
     {
       Icon: FaGlobe,
@@ -47,7 +55,7 @@ export default function FeaturesSection() {
       Icon: FaHistory,
       title: "Dönem Bazlı Takip ve Geçmiş",
       desc: "Her fatura dönemi ayrı ayrı durur. Geçmiş dönemlere dönüp sonuçları istediğiniz zaman yeniden görüntüleyebilirsiniz.",
-      layout: "wide",
+      layout: "normal",
     },
     {
       Icon: FaUsersCog,
@@ -91,7 +99,7 @@ export default function FeaturesSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          Medula entegrasyonu ile dönemin tamamını aktarın, tek tıkla analiz edin.
+          Dönemin tamamını Medula&apos;dan aktarın, tek tıkla analiz edin; yeni reçeteleri canlı takip kaydettiğiniz an kontrol etsin.
         </motion.p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -156,7 +164,15 @@ export default function FeaturesSection() {
                     <Icon size={22} />
                   </div>
                   <div className={isWide ? "" : "mt-5"}>
-                    <h3 className="text-lg font-semibold text-gray-900">{f.title}</h3>
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
+                      {f.title}
+                      {f.live && (
+                        <span className="relative flex h-2 w-2" aria-hidden="true">
+                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#17C6A3] opacity-60" />
+                          <span className="relative inline-flex h-2 w-2 rounded-full bg-[#17C6A3]" />
+                        </span>
+                      )}
+                    </h3>
                     <p className="mt-2 text-sm text-gray-600 leading-relaxed">{f.desc}</p>
                   </div>
                 </div>
