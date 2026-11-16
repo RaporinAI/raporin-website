@@ -38,7 +38,7 @@ function CreditPackSummary({ offer, quantity, onQuantity, locked, available }) {
         <legend className="sr-only">Kredi miktarı</legend>
         <p className="text-sm font-semibold text-slate-900">Kaç kredi?</p>
         <p className="mt-0.5 text-xs text-slate-500">
-          1 kredi = 1 ilaç analizi. Çok alana kredi başı fiyat düşer.
+          1 kredi = 1 reçete analizi; reçetedeki raporlu ilaçların hepsi tek krediyle analiz edilir. Çok alana kredi başı fiyat düşer.
         </p>
         <div className="mt-4 grid grid-cols-5 gap-2">
           {offer.options.map((o) => {

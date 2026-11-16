@@ -88,8 +88,8 @@ function UsageChart({ days, unlimited, unit }) {
   const tooltip = (day) => {
     if (!day.analyses) return "Analiz yapılmadı";
     return unlimited
-      ? `${formatTL(day.analyses)} ilaç analizi`
-      : `${formatTL(day.analyses)} ilaç analizi · ${formatTL(day.credits)} kredi`;
+      ? `${formatTL(day.analyses)} reçete analizi`
+      : `${formatTL(day.analyses)} reçete analizi · ${formatTL(day.credits)} kredi`;
   };
 
   return (
@@ -249,7 +249,7 @@ export default function CreditUsageCard({ unlimited, refreshKey }) {
         <div className="rounded-2xl border border-dashed border-slate-200 px-6 py-10 text-center">
           <p className="font-semibold text-slate-900">Henüz analiz yapılmadı</p>
           <p className="mx-auto mt-1 max-w-md text-sm text-slate-500">
-            Masaüstü uygulamasında yaptığınız ilaç analizleri burada gün gün görünür. Paket yüklemeleri ve RaporinAI
+            Masaüstü uygulamasında yaptığınız reçete analizleri burada gün gün görünür. Paket yüklemeleri ve RaporinAI
             ekibinin tanımladığı ek krediler de burada listelenir.
           </p>
         </div>
@@ -262,7 +262,7 @@ export default function CreditUsageCard({ unlimited, refreshKey }) {
       <div className="space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-slate-500">
-            {unlimited ? "Paketiniz sınırsız; analiz sayınız gösterilir." : "1 ilaç analizi = 1 kredi"}
+            {unlimited ? "Paketiniz sınırsız; analiz sayınız gösterilir." : "1 reçete analizi = 1 kredi"}
           </p>
           <RangeToggle value={days} onChange={setDays} />
         </div>
@@ -286,7 +286,7 @@ export default function CreditUsageCard({ unlimited, refreshKey }) {
             <TeamCreditsNotice grants={teamCredits} />
 
             <div className="grid gap-3 sm:grid-cols-3">
-              <Stat label={`Son ${list.length} günde`} value={`${formatTL(total)} ${unit}`} hint={unlimited ? null : `${formatTL(usage.totalAnalyses)} ilaç analizi`} />
+              <Stat label={`Son ${list.length} günde`} value={`${formatTL(total)} ${unit}`} hint={unlimited ? null : `${formatTL(usage.totalAnalyses)} reçete analizi`} />
               <Stat label="Günlük ortalama" value={`${formatAverage(dailyAverage(list, unlimited))} ${unit}`} hint="Analiz yaptığınız ilk günden itibaren" />
               <Stat
                 label="En yoğun gün"

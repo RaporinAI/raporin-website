@@ -44,7 +44,7 @@ export default function PricingSection() {
           <ul className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm text-gray-600">
             <li className="flex items-center gap-1.5">
               <Coins size={15} className="text-teal-600" aria-hidden="true" />
-              <strong className="font-semibold text-slate-800">1 kredi = 1 ilaç analizi</strong>
+              <strong className="font-semibold text-slate-800">1 kredi = 1 reçete analizi</strong>
             </li>
             {catalog.welcomeCredits > 0 && (
               <>

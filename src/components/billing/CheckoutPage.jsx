@@ -49,7 +49,7 @@ function OrderSummary({ selection, welcome, betaEndsAt }) {
   const credits = price.credits ?? plan.credits;
   const yearly = period === "YEARLY";
   const benefits = [
-    credits ? `Her ay ${formatTL(credits)} analiz kredisi` : "Sınırsız analiz",
+    credits ? `Her ay ${formatTL(credits)} reçete kredisi` : "Sınırsız analiz",
     ...plan.features,
     "Ekibinizle ortak kullanım",
   ];

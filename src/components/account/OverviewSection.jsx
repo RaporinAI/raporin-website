@@ -91,7 +91,7 @@ function WelcomeBanner({ welcome, onNavigate }) {
               </span>
             </p>
             <p className="mt-1 text-sm text-slate-600">
-              Size {formatTL(welcome.granted)} ücretsiz kredi tanımladık; her ilaç analizi 1 kredi harcar. Kalan krediyi{" "}
+              Size {formatTL(welcome.granted)} ücretsiz kredi tanımladık; analiz ettiğiniz her reçete 1 kredi harcar. Kalan krediyi{" "}
               {formatDate(welcome.expiresAt)} tarihine kadar kullanabilirsiniz ({daysLeftLabel(welcome.daysLeft).toLocaleLowerCase("tr")}).
               Kart bilgisi istenmedi; otomatik ücret alınmaz.
             </p>

@@ -50,7 +50,7 @@ export const homeFaqs = [
       },
       {
         q: "Kredi nedir, ne zaman harcanır?",
-        a: "Başarıyla tamamlanan her ilaç analizi 1 kredi harcar. Medula'dan reçete aktarmak ücretsizdir. Analiz başarısız olursa krediniz iade edilir; daha önce analiz edilmiş aynı rapor ve ilaç için tekrar kredi harcanmaz."
+        a: "Başarıyla analiz edilen her reçete 1 kredi harcar; reçetedeki raporlu ilaçların hepsi bu krediyle analiz edilir. Aynı reçete tekrar analiz edilirse kredi harcanmaz. Medula'dan reçete aktarmak ücretsizdir; analiz başarısız olursa krediniz iade edilir."
       },
       {
         q: "Kredim biterse ne olur?",
