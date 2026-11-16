@@ -19,7 +19,7 @@ import { billingApi, formatDate, LEGAL_VERSION, PERIOD_LABEL } from "../../lib/b
 import { formatTL, formatTL0 } from "../../lib/billing/catalog";
 
 const creditsLabel = (option) =>
-  option.unlimited ? "Sınırsız analiz" : `Her ay ${formatTL(option.monthlyCredits)} analiz kredisi`;
+  option.unlimited ? "Sınırsız analiz" : `Her ay ${formatTL(option.monthlyCredits)} reçete kredisi`;
 
 /** Sol sütun: mevcut paketten yeni pakete geçişin özeti ve bugünkü tutar. */
 function UpgradeSummary({ option, subscription, available }) {
