@@ -1,8 +1,10 @@
 "use client";
+import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 import Image from "next/image";
 import Link from "next/link";
+import { captureDiscountCodeFromUrl } from "../lib/billing/discountCode";
 
 const CHECKOUT_PATHS = ["/hesabim/satin-al", "/hesabim/yukselt", "/hesabim/ek-kredi"];
 
@@ -12,6 +14,11 @@ const HIDE_MASCOT_PATHS = ["/", "/kayit", "/giris", "/giris/masaustu", "/sifremi
 export default function LayoutWrapper() {
   const pathname = usePathname();
   const isEnglish = pathname.startsWith("/en");
+
+  // İş ortağı bağlantısındaki indirim kodu (?kod=) ödeme sayfasına kadar hatırlanır.
+  useEffect(() => {
+    captureDiscountCodeFromUrl();
+  }, [pathname]);
 
   // Ödeme sayfaları (paket, yükseltme, ek kredi) dikkat dağıtmayan kendi başlığını kullanır (SaaS checkout düzeni).
   if (isEnglish || CHECKOUT_PATHS.some((path) => pathname.startsWith(path))) return null;

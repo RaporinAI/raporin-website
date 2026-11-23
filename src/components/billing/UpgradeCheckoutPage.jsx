@@ -105,6 +105,14 @@ function UpgradeSummary({ option, subscription, available }) {
         </div>
       )}
 
+      {option.discountLabel && (
+        <p className="rounded-xl bg-teal-50 px-3 py-2 text-xs text-teal-800">
+          İndiriminiz yeni paketinize de uygulanır ({option.discountLabel}): {option.planName}{" "}
+          {PERIOD_LABEL[option.billingPeriod].toLocaleLowerCase("tr")} fiyatı {formatTL0(option.listGrossPrice)} ₺ yerine{" "}
+          {formatTL0(option.periodGrossPrice)} ₺ (KDV dahil).
+        </p>
+      )}
+
       <p className="text-xs text-slate-500">
         {periodChange
           ? `Aylık aboneliğiniz bugün sona erer ve bir daha ücret alınmaz. Yıllık paketiniz bugün başlar; sonraki ödeme ${formatDate(option.renewalAt)} tarihinde ${formatTL0(option.periodGrossPrice)} ₺ (KDV dahil) olarak alınır.`
@@ -145,6 +153,9 @@ function OptionChooser({ options }) {
                 ? "Yıllık ücret, KDV dahil"
                 : `${option.remainingMonths > 1 ? `Kalan ${option.remainingLabel} için paket farkı` : "Bu ayın paket farkı"}, KDV dahil${option.creditsNow > 0 ? ` · bu aya +${formatTL(option.creditsNow)} kredi` : ""}`}
             </p>
+            {option.discountLabel && (
+              <p className="mt-1 text-xs font-medium text-teal-700">İndiriminiz bu pakette de geçerli</p>
+            )}
             <div className="mt-5 flex-1" />
             {option.purchasable ? (
               <Link href={`/hesabim/yukselt?paket=${option.planPriceId}`} className={linkButton}>
