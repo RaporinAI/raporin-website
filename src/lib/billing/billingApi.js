@@ -8,8 +8,15 @@ export const billingApi = {
   usage: (days) => accountRequest(`billing/credits/usage?days=${days}`, undefined, "GET"),
   billingInfo: () => accountRequest("billing/billing-info", undefined, "GET"),
   saveBillingInfo: (info) => accountRequest("billing/billing-info", info, "PUT"),
-  checkout: (planPriceId, legalVersion) =>
-    accountRequest("billing/checkout", { planPriceId, acceptedLegalTerms: true, legalVersion }, "POST"),
+  checkout: (planPriceId, legalVersion, discountCode) =>
+    accountRequest(
+      "billing/checkout",
+      { planPriceId, acceptedLegalTerms: true, legalVersion, discountCode: discountCode || null },
+      "POST",
+    ),
+  /** İndirim kodunu seçilen pakete göre dener; geçersizse message eczacıya gösterilecek neden. */
+  previewDiscount: (code, planPriceId) =>
+    accountRequest("billing/discount-codes/preview", { code, planPriceId }, "POST"),
   checkoutStatus: (id) => accountRequest(`billing/checkout/${id}`, undefined, "GET"),
   cancel: (reason) => accountRequest("billing/subscription/cancel", { reason: reason || null }, "POST"),
   cardUpdate: () => accountRequest("billing/subscription/card-update", {}, "POST"),

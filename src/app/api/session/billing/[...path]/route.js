@@ -8,6 +8,7 @@ const ROUTES = {
   PUT: [/^billing-info$/],
   POST: [
     /^checkout$/,
+    /^discount-codes\/preview$/,
     /^subscription\/cancel$/,
     /^subscription\/card-update$/,
     /^upgrade\/checkout$/,
