@@ -79,7 +79,7 @@ export const metadata = {
     creator: "@raporinai",
   },
   // Yabancı kullanıcı hedeflenmiyor; İngilizce sayfalar erişilebilir kalır ama indekslenmez.
-  // Alt sayfalar (/en/about, /en/download) bu ayarı devralır.
+  // Alt sayfa (/en/about) bu ayarı devralır.
   robots: {
     index: false,
     follow: true,
@@ -97,7 +97,7 @@ export default function EnLayout({ children }) {
 
       {/* Mascot */}
       <div className="fixed right-4 lg:right-8 top-24 z-40 hidden lg:block">
-        <Link href="/en/download" className="block cursor-pointer hover:scale-105 transition-transform duration-300">
+        <Link href="/kayit" className="block cursor-pointer hover:scale-105 transition-transform duration-300">
           <div className="animate-float">
             <Image
               src="/raporin-mascot.png"

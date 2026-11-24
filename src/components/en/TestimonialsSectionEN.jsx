@@ -127,7 +127,7 @@ export default function TestimonialsSectionEN() {
               Reduce your insurance deductions and save time with RaporinAI, trusted by thousands of pharmacists.
             </p>
             <a
-              href="/en/download"
+              href="/kayit"
               className="inline-block px-8 py-4 bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-semibold rounded-full hover:shadow-xl transition-all hover:scale-105"
             >
               Try for Free

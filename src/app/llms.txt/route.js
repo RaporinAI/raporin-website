@@ -22,7 +22,7 @@ export function GET() {
     "",
     "## Resmi bağlantılar",
     "",
-    `- [Windows uygulamasını indirin](${SITE_URL}/indir)`,
+    `- [Ücretsiz hesap oluşturun](${SITE_URL}/kayit): Windows uygulaması giriş yaptıktan sonra Hesabım > Genel bakış bölümünden indirilir`,
     `- [RaporinAI hakkında](${SITE_URL}/hakkimizda)`,
     `- [Haberler ve duyurular](${SITE_URL}/referanslar)`,
     `- [Sıkça sorulan sorular](${SITE_URL}/#sss)`,

@@ -36,7 +36,6 @@ export const softwareSchema = {
   inLanguage: "tr-TR",
   audience: { "@type": "Audience", audienceType: "Eczacılar ve eczane ekipleri" },
   publisher: { "@id": `${SITE_URL}/#organization` },
-  downloadUrl: `${SITE_URL}/indir`,
   screenshot: `${SITE_URL}/screens/toplu-analiz.png`,
   featureList: product.features,
   offers: monthlyOffers(),

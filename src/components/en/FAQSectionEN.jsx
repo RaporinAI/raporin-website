@@ -197,7 +197,7 @@ export default function FAQSectionEN() {
               Contact Us
             </a>
             <a
-              href="/en/download"
+              href="/kayit"
               className="inline-block px-8 py-4 bg-white text-teal-600 font-semibold rounded-full border-2 border-teal-600 hover:bg-teal-50 transition-all"
             >
               Try for Free

@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { trackWhatsAppClick, trackWhatsAppOpen } from "../lib/analytics";
-import { WHATSAPP_NUMBER } from "../lib/contact";
+import { openWhatsApp } from "../lib/whatsapp";
 
 const TEXT = {
   tr: {
@@ -34,18 +34,10 @@ const WhatsAppIcon = ({ className }) => (
 );
 
 /**
- * Masaüstünde doğrudan WhatsApp Web, mobilde wa.me (uygulamayı açar).
- * wa.me masaüstünde önce ara bir "Sohbete devam et" sayfası gösterdiği için ayrılıyor.
+ * Sol altta, çerez ayarları düğmesinin yanında küçük WhatsApp düğmesi; tıklanınca WhatsApp görünümlü karşılama
+ * penceresi açılır. Ön planda sağdaki AI asistan vardır; bu düğme bilerek sade ve küçüktür. Telefonda gizlenir:
+ * orada WhatsApp'a asistan penceresinin başlığından geçilir.
  */
-function buildWhatsAppUrl(message) {
-  const text = encodeURIComponent(message);
-  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-  return isMobile
-    ? `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`
-    : `https://web.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${text}`;
-}
-
-/** Sağ altta sabit WhatsApp butonu; tıklanınca WhatsApp görünümlü karşılama penceresi açılır. */
 export default function WhatsAppButton() {
   const pathname = usePathname() || "/";
   const t = pathname.startsWith("/en") ? TEXT.en : TEXT.tr;
@@ -62,7 +54,7 @@ export default function WhatsAppButton() {
   }, [open]);
 
   const toggle = () => {
-    if (!open) trackWhatsAppOpen(pathname);
+    if (!open) trackWhatsAppOpen(pathname, "button");
     setOpen((v) => !v);
   };
 
@@ -70,14 +62,14 @@ export default function WhatsAppButton() {
     e.preventDefault();
     const text = message.trim();
     if (!text) return;
-    trackWhatsAppClick(pathname);
-    window.open(buildWhatsAppUrl(text), "_blank", "noopener,noreferrer");
+    trackWhatsAppClick(pathname, "button");
+    openWhatsApp(text);
     setMessage("");
     setOpen(false);
   };
 
   return (
-    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 flex flex-col items-end gap-3">
+    <div className="fixed bottom-4 left-[4.25rem] z-40 hidden flex-col items-start gap-3 sm:flex">
       <AnimatePresence>
         {open && (
           <motion.div
@@ -87,7 +79,7 @@ export default function WhatsAppButton() {
             transition={{ duration: 0.2, ease: "easeOut" }}
             role="dialog"
             aria-label={t.label}
-            className="w-[calc(100vw-2rem)] max-w-sm origin-bottom-right overflow-hidden rounded-2xl bg-white shadow-2xl shadow-black/25"
+            className="w-[calc(100vw-2rem)] max-w-sm origin-bottom-left overflow-hidden rounded-2xl bg-white shadow-2xl shadow-black/25"
           >
             {/* Üst bar — WhatsApp sohbet başlığı */}
             <div className="flex items-center gap-3 bg-[#075E54] px-4 py-3 text-white">
@@ -161,17 +153,14 @@ export default function WhatsAppButton() {
         aria-label={open ? t.close : t.label}
         aria-expanded={open}
         title={t.label}
-        className="relative flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/20 transition-all hover:scale-105 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-[#25D366]/40"
+        className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-[#25D366] bg-white text-[#25D366] shadow-md shadow-[#25D366]/25 transition-all hover:scale-105 hover:bg-[#25D366] hover:text-white hover:shadow-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-[#25D366]/30"
       >
-        {!open && (
-          <span className="absolute inset-0 rounded-full bg-[#25D366] opacity-40 animate-ping motion-reduce:hidden" aria-hidden="true" />
-        )}
         {open ? (
-          <svg className="relative h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
+          <svg className="h-5 w-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
             <path strokeLinecap="round" d="M6 6l12 12M18 6L6 18" />
           </svg>
         ) : (
-          <WhatsAppIcon className="relative h-8 w-8" />
+          <WhatsAppIcon className="h-6 w-6" />
         )}
       </button>
     </div>

@@ -40,7 +40,7 @@ export default function PricingSectionEN() {
             </p>
             
             <motion.a
-              href="/en/download"
+              href="/kayit"
               whileHover={{ scale: 1.05 }}
               className="mt-8 inline-block px-10 py-4 rounded-full text-white font-semibold bg-gradient-to-r from-[#17C6A3] to-[#0F918B] hover:shadow-2xl transition-all duration-300"
             >

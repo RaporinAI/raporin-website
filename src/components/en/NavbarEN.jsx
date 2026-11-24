@@ -27,7 +27,7 @@ export default function NavbarEN() {
 
         {/* CTA (desktop) */}
         <div className="hidden lg:block">
-          <Link href="/en/download">
+          <Link href="/kayit">
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -38,7 +38,7 @@ export default function NavbarEN() {
               <div className="relative flex items-center gap-3 px-5 py-2 rounded-full bg-gradient-to-r from-rose-500 via-orange-400 to-amber-400 shadow-md border border-white/20">
                 <div className="flex flex-col items-start leading-none gap-0.5">
                   <span className="text-xs font-bold text-white tracking-wide">
-                    Download App
+                    Sign Up
                   </span>
                   <span className="text-xs font-extrabold text-yellow-100 uppercase tracking-widest drop-shadow-md whitespace-nowrap bg-white/10 px-1.5 py-0.5 rounded-sm">
                     ✨ FREE ACCOUNT
@@ -66,7 +66,7 @@ export default function NavbarEN() {
           <Link href="/en#features" onClick={() => setMenuOpen(false)}>Features</Link>
           <Link href="/en#pricing" onClick={() => setMenuOpen(false)}>Pricing</Link>
           <Link href="/en#contact" onClick={() => setMenuOpen(false)}>Contact</Link>
-          <Link href="/en/download" onClick={() => setMenuOpen(false)}>
+          <Link href="/kayit" onClick={() => setMenuOpen(false)}>
             <motion.div
               whileTap={{ scale: 0.95 }}
               className="relative group cursor-pointer mt-2"
@@ -74,7 +74,7 @@ export default function NavbarEN() {
               <div className="absolute -inset-1 bg-gradient-to-r from-rose-400 to-orange-400 rounded-full blur opacity-20 transition duration-200"></div>
               <div className="relative flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-rose-500 via-orange-400 to-amber-400 shadow-md border border-white/20">
                 <div className="flex flex-col items-start leading-none gap-0.5">
-                  <span className="text-sm font-bold text-white tracking-wide">Download App</span>
+                  <span className="text-sm font-bold text-white tracking-wide">Sign Up</span>
                   <span className="text-xs font-extrabold text-yellow-100 uppercase tracking-widest drop-shadow-md whitespace-nowrap bg-white/10 px-1.5 py-0.5 rounded-sm">✨ FREE ACCOUNT</span>
                 </div>
               </div>
