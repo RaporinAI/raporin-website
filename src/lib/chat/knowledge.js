@@ -48,6 +48,12 @@ export const FALLBACK_NOTES = [
       "Uygulama eczanedeki istediğiniz kadar bilgisayara kurulabilir ve hepsinde aynı anda kullanılabilir; ek bilgisayar (terminal) için ayrı bir ücret yoktur, terminal ücreti alınmaz. Her çalışan Hesabım > Ekip bölümünden açılan kendi kullanıcısıyla giriş yapar; ekip üyesi eklemek ücretsizdir. Tüm ekip eczanenin paketini ve kredisini ortak kullanır.",
   },
   {
+    title: "Eczane otomasyon programlarıyla uyum (Botanik, Havan, Eczanem, Tebeos vb.)",
+    category: "Özellikler",
+    content:
+      "RaporinAI; Botanik, Havan, Eczanem, Tebeos ve diğer tüm eczane otomasyon programlarıyla (EOS) uyumludur. Otomasyon programınızı değiştirmeniz ya da ayrıca entegrasyon kurdurmanız gerekmez, çünkü RaporinAI reçeteleri doğrudan Medula'dan okur; otomasyon programınızdan kaydettiğiniz tüm reçeteleri RaporinAI'de kontrol edebilirsiniz. Bu soruya cevap verirken canlı takibi de anlat: canlı takip açıkken reçeteyi ister kendi otomasyon programınızdan ister RaporinAI içindeki Medula'dan kaydedin, RaporinAI reçeteyi yakalar ve analize kendiliğinden başlar.",
+  },
+  {
     title: "Canlı takip: reçete kaydedilince otomatik kontrol",
     category: "Özellikler",
     content:
