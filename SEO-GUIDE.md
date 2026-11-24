@@ -36,7 +36,7 @@
 - ✅ Ana sayfa (/)
 - ✅ Hakkımızda (/hakkimizda)
 - ✅ Veri Güvenliği (/data-security)
-- ✅ Uygulama İndir (/indir)
+- ~~Uygulama İndir (/indir)~~ kaldırıldı (2026-11); 301 ile `/hesabim`'e yönlenir, indirme hesapta
 
 ## 🚀 Yapılması Gerekenler
 

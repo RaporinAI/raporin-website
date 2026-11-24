@@ -7,7 +7,6 @@ const baseUrl = "https://raporin.com";
 const staticRoutes = [
   { path: "", changeFrequency: "weekly", priority: 1 },
   { path: "/kayit", changeFrequency: "monthly", priority: 0.9 },
-  { path: "/indir", changeFrequency: "weekly", priority: 0.9 },
   { path: "/hakkimizda", changeFrequency: "monthly", priority: 0.8 },
   { path: "/blog", changeFrequency: "weekly", priority: 0.8 },
   { path: "/referanslar", changeFrequency: "monthly", priority: 0.7 },

@@ -54,14 +54,42 @@ export async function trackSignUp(source, user) {
   pushEvent({ user_data: undefined, meta_user_data: undefined });
 }
 
-/** Sağ alttaki WhatsApp karşılama penceresinin açılması. */
-export function trackWhatsAppOpen(pagePath) {
-  pushEvent({ event: "whatsapp_open", page_path: pagePath });
+/**
+ * WhatsApp karşılama penceresinin açılması. source: "button" (sol alttaki WhatsApp düğmesi) ya da
+ * "assistant" (asistan çözemeyince çıkan kart / başlıktaki WhatsApp ikonu).
+ */
+export function trackWhatsAppOpen(pagePath, source = "button") {
+  pushEvent({ event: "whatsapp_open", page_path: pagePath, source });
 }
 
-/** WhatsApp penceresinden mesaj gönderimi (WhatsApp'a yönlendirme); page_path hangi sayfadan yazıldığını taşır. */
-export function trackWhatsAppClick(pagePath) {
-  pushEvent({ event: "whatsapp_click", page_path: pagePath });
+/** WhatsApp'a yönlendirme (mesaj gönderimi); page_path hangi sayfadan, source nereden geçildiğini taşır. */
+export function trackWhatsAppClick(pagePath, source = "button") {
+  pushEvent({ event: "whatsapp_click", page_path: pagePath, source });
+}
+
+/** Sağ alttaki AI asistan penceresinin açılması. */
+export function trackAssistantOpen(pagePath) {
+  pushEvent({ event: "assistant_open", page_path: pagePath });
+}
+
+/** Asistana soru soruldu. suggested: hazır soru butonundan mı geldi; turn: sohbetteki kaçıncı soru. */
+export function trackAssistantMessage(pagePath, { suggested, turn }) {
+  pushEvent({ event: "assistant_message", page_path: pagePath, suggested: Boolean(suggested), turn });
+}
+
+/** Asistan cevabına 👍/👎. */
+export function trackAssistantFeedback(pagePath, rating) {
+  pushEvent({ event: "assistant_feedback", page_path: pagePath, rating });
+}
+
+/** Asistan cevabındaki butonun tıklanması (PAKETLER, INDIR, KAYIT, HESABIM). */
+export function trackAssistantAction(pagePath, action) {
+  pushEvent({ event: "assistant_action", page_path: pagePath, action });
+}
+
+/** Asistan cevap veremedi (limit, kapalı, hata). reason: minute | day | global | conversation | disabled | unavailable */
+export function trackAssistantUnavailable(pagePath, reason) {
+  pushEvent({ event: "assistant_unavailable", page_path: pagePath, reason });
 }
 
 /** Web sitesinden başarılı giriş. */

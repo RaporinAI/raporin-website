@@ -28,7 +28,10 @@ const nextConfig = {
         permanent: true,
       },
       { source: '/about', destination: '/hakkimizda', permanent: true },
-      { source: '/download', destination: '/indir', permanent: true },
+      // Ayrı indirme sayfası yok: uygulama hesap açıldıktan sonra Hesabım > Genel bakış'tan indirilir.
+      { source: '/indir', destination: '/hesabim', permanent: true },
+      { source: '/download', destination: '/hesabim', permanent: true },
+      { source: '/en/download', destination: '/kayit', permanent: true },
       { source: '/privacy', destination: '/gizlilik-politikasi', permanent: true },
       // Beta dönemi sayfası: ücretli döneme geçişte ana ürün sayfasına taşındı.
       { source: '/ucretsiz-eczane-rapor-programi', destination: '/eczane-rapor-kontrol-programi', permanent: true },

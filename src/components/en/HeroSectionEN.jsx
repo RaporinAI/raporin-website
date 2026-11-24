@@ -132,7 +132,7 @@ export default function HeroSectionEN() {
         {/* CTA Buttons */}
         <div className="mt-5 sm:mt-6 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
           <motion.a
-            href="/en/download"
+            href="/kayit"
             whileHover={{ scale: 1.05 }}
             animate={{
               boxShadow: [

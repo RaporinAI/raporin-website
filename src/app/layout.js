@@ -4,6 +4,7 @@ import StructuredData from "../components/StructuredData";
 import LayoutWrapper from "../components/LayoutWrapper";
 import CookieConsent from "../components/CookieConsent";
 import WhatsAppButton from "../components/WhatsAppButton";
+import AssistantChat from "../components/AssistantChat";
 import { GTM_ID } from "../lib/analytics";
 import { CONSENT_STORAGE_KEY, CONSENT_VERSION } from "../lib/cookieConsent";
 
@@ -170,7 +171,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           {children}
         </div>
 
-        {/* Sağ altta sabit WhatsApp destek butonu (TR ve EN tüm sayfalarda) */}
+        {/* Destek (TR ve EN tüm sayfalarda): sağ altta ön planda AI asistan, sol altta küçük WhatsApp düğmesi */}
+        <AssistantChat />
         <WhatsAppButton />
 
         {/* Çerez bandı + çerez yönetim paneli (TR ve EN tüm sayfalarda) */}
